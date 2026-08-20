@@ -24,6 +24,11 @@ vers `github.com/djouder38/freecourt` → déploiement Vercel en cours/fait.
   (ne pas dépendre de l'event 'load' MapLibre).
 - "Merci" de validation invisible → CourtDetail ne remet loading=true
   qu'au premier chargement.
+- **Navigation impossible en desktop** (signalé par Théo) : la tab bar est
+  en `lg:hidden` (spec mobile) et rien ne la remplaçait → aucun accès au
+  profil ni à la recherche, et /profile était une page sans issue.
+  Corrigé : bouton profil + recherche inline dans la sidebar, bouton
+  retour sur Profile. La spec ne prévoyait pas cette nav desktop.
 
 ## Écarts spec assumés (à revalider par Théo)
 1. **MapLibre + OpenFreeMap au lieu de Mapbox GL** : dark-v11 exige un token
