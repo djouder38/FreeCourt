@@ -93,8 +93,43 @@ function toggleFilter(field, key) {
     <!-- Sidebar desktop : liste / détail -->
     <aside class="hidden w-80 shrink-0 flex-col overflow-y-auto border-r border-edge bg-surface lg:flex">
       <div class="border-b border-edge p-4">
-        <h1 class="font-display text-3xl tracking-wide text-accent">FreeCourt</h1>
-        <p class="text-xs text-txt-soft">Les terrains de basket du monde entier</p>
+        <div class="mb-3 flex items-start justify-between gap-2">
+          <div>
+            <h1 class="font-display text-3xl leading-none tracking-wide text-accent">FreeCourt</h1>
+            <p class="text-xs text-txt-soft">Les terrains de basket du monde entier</p>
+          </div>
+          <button
+            class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-card text-lg hover:bg-edge"
+            title="Profil"
+            aria-label="Profil"
+            @click="router.push('/profile')"
+          >
+            👤
+          </button>
+        </div>
+
+        <!-- Recherche : inline en desktop, la tab bar mobile ouvre un sheet -->
+        <form class="flex gap-2" @submit.prevent="runSearch">
+          <input
+            v-model="searchQuery"
+            type="search"
+            placeholder="Ville, quartier, adresse…"
+            class="min-w-0 flex-1 rounded-xl border border-edge bg-card px-3 py-2 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
+          />
+          <button class="rounded-xl bg-accent px-3 text-sm font-bold" :disabled="searching">
+            {{ searching ? '…' : '🔍' }}
+          </button>
+        </form>
+        <div v-if="searchResults.length" class="mt-2 space-y-1">
+          <button
+            v-for="place in searchResults"
+            :key="place.label"
+            class="block w-full truncate rounded-lg px-2 py-1.5 text-left text-xs hover:bg-card"
+            @click="gotoPlace(place)"
+          >
+            📍 {{ place.label }}
+          </button>
+        </div>
       </div>
 
       <div v-if="selectedCourt" class="p-4">

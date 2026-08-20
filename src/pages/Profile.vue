@@ -1,13 +1,18 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import { useUserStore, STATUS_LEVELS } from '../stores/user.js'
 import ContributorBadge from '../components/community/ContributorBadge.vue'
 import Mascot from '../components/ui/Mascot.vue'
 
+const router = useRouter()
 const userStore = useUserStore()
 </script>
 
 <template>
   <div class="mx-auto max-w-lg px-4 pb-28 pt-6 lg:pb-8">
+    <button class="mb-4 text-sm font-semibold text-txt-soft hover:text-white" @click="router.push('/')">
+      ← Retour à la carte
+    </button>
     <h1 class="mb-6 font-display text-4xl tracking-wide">Profil</h1>
 
     <!-- Auth pas encore branchée : état vide avec mascotte -->
