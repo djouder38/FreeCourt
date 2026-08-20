@@ -33,11 +33,18 @@ vers `github.com/djouder38/freecourt` → déploiement Vercel en cours/fait.
    SQL interdite par Supabase, à purger via le dashboard si ça dérange).
 3. Ciutadella Court est à 3/5 validations (2 seed + 1 test involontaire).
 
+## Déploiement (état exact)
+- Push initial → Vercel a déployé en production : https://free-court-ebon.vercel.app
+- ⚠️ Page blanche pour l'instant : "supabaseUrl is required" — les env vars
+  ne sont pas posées sur Vercel (pas d'outil MCP pour ça).
+- À faire par Théo (2 min) : Vercel → projet free-court → Settings →
+  Environment Variables → ajouter VITE_SUPABASE_URL et
+  VITE_SUPABASE_ANON_KEY (valeurs dans le .env local) → Redeploy.
+
 ## Reste à faire
-- Vercel : poser les env vars VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
-  (valeurs dans .env local) puis vérifier le déploiement production.
+- Vérifier la prod (mobile) une fois les env vars posées.
 - v1 auth : voir ROADMAP.md.
 
 ## En attente de Théo
+- Poser les 2 env vars Vercel puis me dire de re-vérifier la prod.
 - OK sur le choix MapLibre/OpenFreeMap (ou fournir un token Mapbox).
-- Confirmer que le déploiement Vercel est bien vert avec les env vars.
