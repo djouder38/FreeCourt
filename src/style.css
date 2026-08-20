@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Palette FreeCourt — street ball dark */
+  --color-court: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-card: #242424;
+  --color-edge: #333333;
+  --color-accent: #ff6b2b;
+  --color-gold: #ffd700;
+  --color-txt-soft: #9ca3af;
+  --color-ok: #22c55e;
+  --color-warn: #f59e0b;
+  --color-bad: #ef4444;
+
+  --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--color-court);
+  color: #fff;
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+}
+
+/* Marqueurs FreeCourt posés sur la carte MapLibre */
+.fc-marker {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.fc-marker:hover {
+  transform: scale(1.12);
+}
+
+.fc-marker--draft {
+  opacity: 0.55;
+}
+
+/* Curseur en mode "pin ton terrain" */
+.maplibregl-map.fc-pin-mode .maplibregl-canvas {
+  cursor: crosshair !important;
+}
+
+/* Attribution discrète sur fond sombre */
+.maplibregl-ctrl-attrib {
+  background: rgba(15, 15, 15, 0.7) !important;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: #9ca3af !important;
+}

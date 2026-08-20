@@ -1,0 +1,65 @@
+:root {
+  --orange: #e8622c;
+  --orange-dark: #c94f1e;
+  --ink: #1c1917;
+  --paper: #ffffff;
+  --muted: #78716c;
+  --line: #e7e5e4;
+  --shadow: 0 4px 16px rgba(28, 25, 23, 0.14);
+  --radius: 12px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Marqueur terrain : pastille ballon */
+.court-marker {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.court-marker--selected {
+  background: var(--ink);
+}
+
+/* Clusters aux couleurs du projet */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: rgba(232, 98, 44, 0.35);
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: var(--orange);
+  color: #fff;
+  font-weight: 700;
+}
