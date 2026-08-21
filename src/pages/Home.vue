@@ -167,13 +167,24 @@ function onDocumentPointerDown(event) {
 }
 
 onMounted(() => document.addEventListener('pointerdown', onDocumentPointerDown))
-onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPointerDown))
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', onDocumentPointerDown)
+  // Quitter la carte annule un placement en cours : y revenir en mode pin
+  // sans l'avoir demande etait un piege.
+  mapStore.exitPinMode()
+})
 
 const FILTER_GROUPS = [
   { field: 'surface', label: 'Surface', options: SURFACE_LABELS },
   { field: 'condition', label: 'État', options: CONDITION_LABELS },
   { field: 'traffic', label: 'Fréquentation', options: TRAFFIC_LABELS },
 ]
+
+function clearFilters() {
+  courtsStore.filters.surface = null
+  courtsStore.filters.condition = null
+  courtsStore.filters.traffic = null
+}
 
 function toggleFilter(field, key) {
   courtsStore.filters[field] = courtsStore.filters[field] === key ? null : key
@@ -288,6 +299,15 @@ function toggleFilter(field, key) {
     <!-- Carte -->
     <div class="relative min-w-0 flex-1">
       <MapView ref="mapView" @select="onSelect" @locating="onLocating" />
+
+      <!-- Le nom du produit : sur mobile il n'apparaissait nulle part, et
+           le premier écran était donc anonyme. -->
+      <p
+        v-if="mapStore.mode === 'browse'"
+        class="pointer-events-none absolute inset-x-0 top-7 z-0 text-center font-display text-2xl leading-none tracking-wide text-accent-text lg:hidden"
+      >
+        FreeCourt
+      </p>
 
       <!-- Recherche : la loupe reste en haut à droite et le panneau se
            déploie vers le bas, en miroir des filtres à gauche. -->
@@ -413,10 +433,26 @@ function toggleFilter(field, key) {
       <!-- Les terrains proches remplacent les deux CTA : on montre, on ne
            demande pas. « Ajouter » redevient une action secondaire flottante. -->
       <NearbyStrip
-        v-if="mapStore.mode === 'browse' && hasPosition"
+        v-if="mapStore.mode === 'browse' && hasPosition && courtsStore.filtered.length"
         :courts="courtsStore.nearby"
         @select="onSelect"
       />
+
+      <!-- Filtrer à zéro résultat vidait la carte sans rien dire : on nomme
+           la cause et on offre la sortie. -->
+      <div
+        v-if="mapStore.mode === 'browse' && courtsStore.filtered.length === 0 && !courtsStore.loading"
+        class="absolute inset-x-3 bottom-24 z-10 rounded-2xl border border-edge bg-surface/95 p-4 text-center shadow-xl backdrop-blur lg:hidden"
+      >
+        <p class="text-sm font-semibold">Aucun terrain ne correspond à tes filtres.</p>
+        <button
+          v-if="courtsStore.hasActiveFilters"
+          class="mt-3 min-h-11 rounded-full bg-accent px-5 text-sm font-bold uppercase tracking-wide text-on-accent"
+          @click="clearFilters"
+        >
+          Effacer les filtres
+        </button>
+      </div>
 
       <!-- Contrôles de carte : même vocabulaire de ronds que les filtres et
            la recherche. Position au-dessus, ajout en accent dessous. -->

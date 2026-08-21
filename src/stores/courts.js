@@ -48,8 +48,10 @@ export const useCourtsStore = defineStore('courts', {
         .slice(0, 12)
     },
 
+    // On cherche dans les terrains VISIBLES : afficher la fiche d un terrain
+    // que le filtre courant exclut serait incoherent.
     selected(state) {
-      return state.courts.find((c) => c.id === state.selectedId) ?? null
+      return this.filtered.find((c) => c.id === state.selectedId) ?? null
     },
     hasActiveFilters(state) {
       return Boolean(state.filters.surface || state.filters.condition || state.filters.traffic)

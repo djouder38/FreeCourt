@@ -57,7 +57,7 @@ onMounted(load)
       </div>
       <p v-if="court.rating_avg" class="mb-3 text-sm text-txt-soft">
         <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
-        <span v-if="court.locked" class="ml-2 inline-flex items-center gap-1"><Icon name="lock" :size="13" />verrouillé par la communauté</span>
+        <span v-if="court.locked" class="ml-2 inline-flex items-center gap-1"><Icon name="lock" :size="13" />validé par la communauté</span>
       </p>
 
       <CourtBadges :court="court" class="mb-3" />

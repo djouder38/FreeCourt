@@ -5,6 +5,8 @@ import { createMap, maplibregl, setMapTheme } from '../../services/mapbox.js'
 import { useCourtsStore } from '../../stores/courts.js'
 import { useMapStore } from '../../stores/map.js'
 import CourtMarker from './CourtMarker.vue'
+import { CONDITION_LABELS, SURFACE_LABELS } from '../../services/labels.js'
+import { formatDistance } from '../../services/geo.js'
 import ClusterMarker from './ClusterMarker.vue'
 import { useTheme } from '../../composables/useTheme.js'
 
@@ -35,6 +37,17 @@ function buildIndex() {
   )
 }
 
+// Ce que doit entendre quelqu'un qui n'a pas d'ecran : le nom, l'etat, le
+// revetement, la distance si on la connait, et le statut de verification.
+function markerLabel(court) {
+  const parts = [court.name]
+  if (court.condition) parts.push(CONDITION_LABELS[court.condition]?.label)
+  if (court.surface) parts.push(SURFACE_LABELS[court.surface]?.label)
+  if (court.distance) parts.push('à ' + formatDistance(court.distance))
+  if (court.status === 'draft') parts.push('à vérifier')
+  return parts.filter(Boolean).join(', ')
+}
+
 function currentBBox() {
   const b = map.getBounds()
   return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]
@@ -62,25 +75,49 @@ function syncMarkers() {
     }
 
     const el = document.createElement('div')
+    let label = ''
     if (isCluster) {
       const count = feature.properties.point_count
       render(h(ClusterMarker, { count }), el)
-      el.addEventListener('click', (event) => {
+      el.setAttribute('role', 'button')
+      el.setAttribute('tabindex', '0')
+      label = count + ' terrains regroupés, ouvrir'
+      el.setAttribute('aria-label', label)
+      const expand = (event) => {
         event.stopPropagation()
         if (mapStore.mode === 'pin') return
         zoomIntoCluster(feature.properties.cluster_id, [lng, lat])
+      }
+      el.addEventListener('click', expand)
+      el.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return
+        event.preventDefault()
+        expand(event)
       })
     } else {
       const court = feature.properties.court
       render(h(CourtMarker, { court }), el)
-      el.addEventListener('click', (event) => {
+      el.setAttribute('role', 'button')
+      el.setAttribute('tabindex', '0')
+      label = markerLabel(court)
+      el.setAttribute('aria-label', label)
+      const open = (event) => {
         event.stopPropagation()
         if (mapStore.mode === 'pin') return
         emit('select', court.id)
+      }
+      el.addEventListener('click', open)
+      el.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return
+        event.preventDefault()
+        open(event)
       })
     }
 
     const marker = new maplibregl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map)
+    // MapLibre pose son propre aria-label générique (« Map marker ») sur
+    // l'élément : on repose le nôtre APRÈS l'ajout, sinon il est écrasé.
+    el.setAttribute('aria-label', label)
     markers.set(key, { marker, el })
   }
 

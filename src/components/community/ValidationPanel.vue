@@ -5,7 +5,7 @@ import FlagIssue from './FlagIssue.vue'
 import Icon from '../ui/Icon.vue'
 
 // Validation communautaire : "le terrain existe", "les infos sont bonnes",
-// ou signalement d'un problème. 5 validations => terrain verrouillé + validé.
+// ou signalement d'un problème. 5 validations => le terrain passe en « validé ».
 const props = defineProps({
   court: { type: Object, required: true },
 })
@@ -33,7 +33,7 @@ async function validate(type) {
   <section class="rounded-2xl border border-edge bg-card p-4">
     <h3 class="mb-1 font-display text-xl tracking-wide">Valide ce terrain</h3>
     <p class="mb-3 text-xs text-txt-soft">
-      {{ court.validation_count }}/5 validations — à 5, le terrain est verrouillé et certifié.
+      {{ court.validation_count }}/5 validations — à 5, le terrain passe en « validé ».
     </p>
 
     <p v-if="done" class="text-sm font-semibold text-ok">Merci pour le coup de main !</p>
