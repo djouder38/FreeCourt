@@ -62,6 +62,27 @@ en **scope projet** avec les **hooks actifs** (choix de Theo).
   brief design durable que toutes les commandes relisent). A proposer a
   Theo -- c'est ce qui donnerait le plus de valeur aux commandes suivantes.
 
+## Passe design du 2026-08-21 (apres install Impeccable)
+
+**Regle actee par Theo : Impeccable fait autorite sur le design, la spec
+d'origine (freecourt-claude-code-prompt.md) est caduque sur ce plan.**
+Elle reste la reference produit et fonctionnelle.
+
+Livre et verifie :
+- `PRODUCT.md` ecrit via /impeccable init (interview de Theo). Positionnement
+  cle ajoute par lui : "une carte qui ne montre que les terrains et rien
+  d'autre", l'itineraire est delegue a Google Maps.
+- Contrastes mesures et corriges : blanc sur orange plafonnait a 2.84:1
+  (le CTA principal etait le texte le moins lisible de l'app) -> encre
+  #0f0f0f, 6.75:1. Pastilles cluster 3.66 -> 5.24-8.23. Token
+  --color-bad-soft pour le texte rouge (5.61:1).
+- Surfaces navigateur thematisees : ::selection, focus-visible, caret,
+  scrollbars.
+- Emoji entierement remplaces : 22 distincts / 41 occurrences -> nouveau
+  `src/components/ui/Icon.vue` (26 icones, grille 24x24, trait 2,
+  currentColor). Verifie : 59 icones a l'ecran, un seul trait, zero emoji.
+- BottomSheet : anime `transform` au lieu de `height` (trouve par le hook).
+
 ## Prochaine etape
 - v1 auth + statuts contributeurs (structure prête dans `stores/user.js`) :
   Supabase Auth, scoring, quotas, RLS resserrées. En attente du feu vert.

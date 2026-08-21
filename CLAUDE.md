@@ -31,6 +31,16 @@ l'avancement.
   n'est composité — les transitions CSS, les animations `easeTo/flyTo` et
   l'event `load` de MapLibre ne se déclenchent pas. Neutraliser la
   transition ou espionner l'appel plutôt que conclure à un bug.
+- Design : Impeccable fait autorite, PAS la spec d origine
+  (freecourt-claude-code-prompt.md est caduque cote design, decision Theo
+  du 2026-08-21). Elle reste la reference produit/fonctionnel.
+- Icones : jamais d emoji. Tout passe par components/ui/Icon.vue (grille
+  24x24, trait 2, bouts arrondis, currentColor). Ajouter une icone = une
+  entree dans le registre de ce fichier, pas un glyphe inline.
+- Contraste : minimum WCAG AA (4.5:1 texte courant). Le blanc sur l orange
+  de marque plafonne a 2.84:1 -> sur fond accent, le texte est en
+  text-court (encre). Le token --color-bad-soft sert au TEXTE rouge ;
+  --color-bad aux fonds pleins.
 - Skill Impeccable installe en local (.claude/skills/, gitignore) :
   detecteur d anti-patterns design + 23 commandes /impeccable. Hooks actifs
   (PostToolUse + Stop) via .claude/settings.local.json. Relancer le scan a
