@@ -44,6 +44,24 @@ de Théo — carte recontrastée, clustering, recherche compacte, CTA géoloc.
 - `~/.claude/lessons-learned.md` a un souci d'encodage (accents cassés).
   Pas touché — Théo doit dire s'il veut que je le réécrive.
 
-## Prochaine étape
+## Outillage design : Impeccable (installe le 2026-08-21)
+Skill tiers (github.com/pbakaus/impeccable, Apache 2.0, 61k stars) installe
+en **scope projet** avec les **hooks actifs** (choix de Theo).
+- Emplacement : `.claude/skills/impeccable/` (148 fichiers) + hooks dans
+  `.claude/settings.local.json`. Les deux sont **gitignores** : c'est un
+  outil reinstallable, pas une dependance du projet.
+- Reinstaller / mettre a jour :
+  `npx impeccable install --providers=claude --scope=project`
+- Scan manuel : `node .claude/skills/impeccable/scripts/detect.mjs src`
+- Ce que ca apporte : 23 commandes design (`/impeccable critique|audit|
+  polish|layout|colorize|bolder|quieter...`) + 59 regles deterministes
+  (sans LLM) qui detectent les tics visuels d'IA.
+- Premier passage sur FreeCourt : 1 finding reel (layout-transition sur
+  BottomSheet) corrige. Le scan de `src` est propre (exit 0).
+- Pas encore fait : `/impeccable init` (ecrit PRODUCT.md + DESIGN.md, le
+  brief design durable que toutes les commandes relisent). A proposer a
+  Theo -- c'est ce qui donnerait le plus de valeur aux commandes suivantes.
+
+## Prochaine etape
 - v1 auth + statuts contributeurs (structure prête dans `stores/user.js`) :
   Supabase Auth, scoring, quotas, RLS resserrées. En attente du feu vert.
