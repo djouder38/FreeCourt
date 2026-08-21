@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Bally en icône : à 16px les bras et la bouche disparaissent, seuls le
+       ballon et les yeux portent encore l'identité. Le ballon remplit le
+       cadre pour rester lisible en tout petit. -->
+  <circle cx="60" cy="60" r="58" fill="#FF6B2B"/>
+  <g stroke="#141010" stroke-width="4.5" fill="none" stroke-linecap="round">
+    <path d="M2 60h116"/>
+    <path d="M60 2v116"/>
+    <path d="M19 19C33 33 33 87 19 101"/>
+    <path d="M101 19C87 33 87 87 101 101"/>
+  </g>
+  <circle cx="43" cy="47" r="10" fill="#fff"/>
+  <circle cx="77" cy="47" r="10" fill="#fff"/>
+  <circle cx="45" cy="49" r="4.5" fill="#141010"/>
+  <circle cx="79" cy="49" r="4.5" fill="#141010"/>
+</svg>
