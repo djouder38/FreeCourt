@@ -1,5 +1,6 @@
 <script setup>
 import { SURFACE_LABELS, CONDITION_LABELS, TRAFFIC_LABELS } from '../../services/labels.js'
+import Icon from '../ui/Icon.vue'
 
 defineProps({
   court: { type: Object, required: true },
@@ -13,23 +14,23 @@ defineProps({
       v-if="court.surface"
       class="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1 text-xs font-semibold"
     >
-      {{ SURFACE_LABELS[court.surface]?.icon }}
-      <template v-if="!compact">{{ SURFACE_LABELS[court.surface]?.label }}</template>
+      <Icon :name="SURFACE_LABELS[court.surface].icon" :size="14" />
+      <template v-if="!compact">{{ SURFACE_LABELS[court.surface].label }}</template>
     </span>
     <span
       v-if="court.condition"
       class="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1 text-xs font-semibold"
-      :class="CONDITION_LABELS[court.condition]?.color"
+      :class="CONDITION_LABELS[court.condition].color"
     >
-      {{ CONDITION_LABELS[court.condition]?.icon }}
-      <template v-if="!compact">{{ CONDITION_LABELS[court.condition]?.label }}</template>
+      <Icon :name="CONDITION_LABELS[court.condition].icon" :size="14" />
+      <template v-if="!compact">{{ CONDITION_LABELS[court.condition].label }}</template>
     </span>
     <span
       v-if="court.traffic"
       class="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1 text-xs font-semibold"
     >
-      {{ TRAFFIC_LABELS[court.traffic]?.icon }}
-      <template v-if="!compact">{{ TRAFFIC_LABELS[court.traffic]?.label }}</template>
+      <Icon :name="TRAFFIC_LABELS[court.traffic].icon" :size="14" />
+      <template v-if="!compact">{{ TRAFFIC_LABELS[court.traffic].label }}</template>
     </span>
   </div>
 </template>

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
+import Icon from '../ui/Icon.vue'
 
 // Avis : note 1-5 étoiles + texte, vote "utile" sur chaque avis.
 const props = defineProps({
@@ -91,11 +92,11 @@ async function vote(review) {
         <p v-if="review.text" class="mb-2 text-sm leading-relaxed">{{ review.text }}</p>
         <button
           type="button"
-          class="text-xs font-semibold text-txt-soft hover:text-white"
+          class="inline-flex items-center gap-1.5 text-xs font-semibold text-txt-soft hover:text-white"
           :class="{ 'text-accent': votedIds.has(review.id) }"
           @click="vote(review)"
         >
-          👍 Utile ({{ review.helpful_count }})
+          <Icon name="thumb" :size="14" /> Utile ({{ review.helpful_count }})
         </button>
       </li>
     </ul>

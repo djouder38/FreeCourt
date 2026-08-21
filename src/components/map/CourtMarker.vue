@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { CONDITION_LABELS } from '../../services/labels.js'
+import Icon from '../ui/Icon.vue'
 
 // Marker SVG dynamique : contour = état, texture = revêtement,
 // badge = fréquentation, semi-transparent si draft.
@@ -10,8 +11,8 @@ const props = defineProps({
 
 const ringColor = computed(() => CONDITION_LABELS[props.court.condition]?.hex ?? '#9CA3AF')
 const badge = computed(() => {
-  if (props.court.traffic === 'busy') return '🔥'
-  if (props.court.traffic === 'iconic') return '⭐'
+  if (props.court.traffic === 'busy') return { name: 'flame', tone: 'text-warn' }
+  if (props.court.traffic === 'iconic') return { name: 'star', tone: 'text-gold' }
   return null
 })
 </script>
@@ -41,9 +42,10 @@ const badge = computed(() => {
     </svg>
     <span
       v-if="badge"
-      class="absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full bg-surface text-[11px] shadow"
+      class="absolute -right-1.5 -top-1.5 grid h-5 w-5 place-items-center rounded-full border border-edge bg-surface shadow"
+      :class="badge.tone"
     >
-      {{ badge }}
+      <Icon :name="badge.name" :size="11" :filled="badge.name === 'star'" />
     </span>
   </div>
 </template>

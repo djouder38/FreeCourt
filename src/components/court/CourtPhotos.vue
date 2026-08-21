@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
+import Icon from '../ui/Icon.vue'
 
 // Galerie 3 photos max + upload vers Supabase Storage.
 const props = defineProps({
@@ -55,10 +56,11 @@ async function onFile(e) {
         v-if="court.photos.length < 3"
         type="button"
         :disabled="uploading"
-        class="grid h-28 w-40 shrink-0 place-items-center rounded-xl border border-dashed border-edge bg-surface text-sm font-semibold text-txt-soft disabled:opacity-50"
+        class="flex h-28 w-40 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-edge bg-surface text-sm font-semibold text-txt-soft disabled:opacity-50"
         @click="fileInput.click()"
       >
-        {{ uploading ? 'Envoi…' : '+ Ajouter' }}
+        <Icon v-if="!uploading" name="camera" :size="20" />
+        {{ uploading ? 'Envoi…' : 'Ajouter' }}
       </button>
     </div>
     <p v-if="court.photos.length === 0 && !uploading" class="mt-2 text-xs text-txt-soft">

@@ -11,6 +11,7 @@ import CourtBadges from '../components/court/CourtBadges.vue'
 import BottomSheet from '../components/ui/BottomSheet.vue'
 import StatusChip from '../components/ui/StatusChip.vue'
 import Mascot from '../components/ui/Mascot.vue'
+import Icon from '../components/ui/Icon.vue'
 
 const router = useRouter()
 const courtsStore = useCourtsStore()
@@ -132,7 +133,7 @@ function toggleFilter(field, key) {
             aria-label="Profil"
             @click="router.push('/profile')"
           >
-            👤
+            <Icon name="user" :size="20" />
           </button>
         </div>
 
@@ -144,8 +145,9 @@ function toggleFilter(field, key) {
             placeholder="Ville, quartier, adresse…"
             class="min-w-0 flex-1 rounded-xl border border-edge bg-card px-3 py-2 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
           />
-          <button class="rounded-xl bg-accent text-court px-3 text-sm font-bold" :disabled="searching">
-            {{ searching ? '…' : '🔍' }}
+          <button class="grid place-items-center rounded-xl bg-accent px-3 text-sm font-bold text-court" :disabled="searching">
+            <span v-if="searching">…</span>
+            <Icon v-else name="search" :size="16" />
           </button>
         </form>
         <div v-if="searchResults.length" class="mt-2 space-y-1">
@@ -155,7 +157,7 @@ function toggleFilter(field, key) {
             class="block w-full truncate rounded-lg px-2 py-1.5 text-left text-xs hover:bg-card"
             @click="gotoPlace(place)"
           >
-            📍 {{ place.label }}
+            <Icon name="pin" :size="13" class="mr-1 inline align-text-bottom" />{{ place.label }}
           </button>
         </div>
       </div>
@@ -191,16 +193,18 @@ function toggleFilter(field, key) {
       <!-- Les 2 actions principales, à parité -->
       <div class="space-y-2 border-t border-edge p-4">
         <button
-          class="w-full rounded-full bg-accent text-court py-3 font-bold uppercase tracking-wide shadow-lg shadow-accent/25"
+          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25"
           @click="findNearMe"
         >
-          📍 Un terrain près de moi
+          <Icon name="pin" :size="18" />
+          Un terrain près de moi
         </button>
         <button
-          class="w-full rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent hover:bg-accent/10"
+          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent hover:bg-accent/10"
           @click="startAdd"
         >
-          🏀 Ajouter un terrain
+          <Icon name="ball" :size="18" />
+          Ajouter un terrain
         </button>
       </div>
     </aside>
@@ -225,17 +229,18 @@ function toggleFilter(field, key) {
           <button
             type="submit"
             :disabled="searching"
-            class="shrink-0 rounded-full bg-accent text-court px-4 text-sm font-bold shadow-lg"
+            class="grid shrink-0 place-items-center rounded-full bg-accent px-4 text-sm font-bold text-court shadow-lg"
           >
-            {{ searching ? '…' : '🔍' }}
+            <span v-if="searching">…</span>
+            <Icon v-else name="search" :size="18" />
           </button>
           <button
             type="button"
             aria-label="Fermer la recherche"
-            class="shrink-0 rounded-full border border-edge bg-surface px-3 text-txt-soft shadow-lg"
+            class="grid shrink-0 place-items-center rounded-full border border-edge bg-surface px-3 text-txt-soft shadow-lg"
             @click="closeSearch"
           >
-            ×
+            <Icon name="close" :size="18" />
           </button>
         </form>
         <p v-if="searchError" class="mt-2 rounded-full bg-surface px-4 py-2 text-center text-xs text-txt-soft shadow-lg">
@@ -248,7 +253,7 @@ function toggleFilter(field, key) {
             class="block w-full truncate px-4 py-2.5 text-left text-xs hover:bg-card"
             @click="gotoPlace(place)"
           >
-            📍 {{ place.label }}
+            <Icon name="pin" :size="13" class="mr-1 inline align-text-bottom" />{{ place.label }}
           </button>
         </div>
       </div>
@@ -261,7 +266,7 @@ function toggleFilter(field, key) {
           aria-label="Filtres"
           @click="filtersOpen = !filtersOpen"
         >
-          ⚙️
+          <Icon name="filters" :size="20" />
         </button>
         <div v-if="filtersOpen" class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-2xl">
           <div v-for="group in FILTER_GROUPS" :key="group.field" class="mb-3 last:mb-0">
@@ -270,11 +275,11 @@ function toggleFilter(field, key) {
               <button
                 v-for="(cfg, key) in group.options"
                 :key="key"
-                class="rounded-full border px-2.5 py-1 text-xs font-semibold"
+                class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold"
                 :class="courtsStore.filters[group.field] === key ? 'border-accent bg-accent/20' : 'border-edge bg-card'"
                 @click="toggleFilter(group.field, key)"
               >
-                {{ cfg.icon }} {{ cfg.label }}
+                <Icon :name="cfg.icon" :size="13" />{{ cfg.label }}
               </button>
             </div>
           </div>
@@ -286,16 +291,18 @@ function toggleFilter(field, key) {
         class="absolute inset-x-3 bottom-24 z-10 flex flex-col gap-2 lg:hidden"
       >
         <button
-          class="w-full rounded-full bg-accent text-court py-3.5 text-sm font-bold uppercase tracking-wide shadow-xl shadow-accent/30"
+          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 text-sm font-bold uppercase tracking-wide text-court shadow-xl shadow-accent/30"
           @click="findNearMe"
         >
-          📍 Trouver un terrain près de moi
+          <Icon name="pin" :size="18" />
+          Trouver un terrain près de moi
         </button>
         <button
-          class="w-full rounded-full border-2 border-accent bg-surface/95 py-3 text-sm font-bold uppercase tracking-wide text-accent shadow-xl backdrop-blur"
+          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-surface/95 py-3 text-sm font-bold uppercase tracking-wide text-accent shadow-xl backdrop-blur"
           @click="startAdd"
         >
-          🏀 Ajouter un terrain
+          <Icon name="ball" :size="18" />
+          Ajouter un terrain
         </button>
       </div>
 

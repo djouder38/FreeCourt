@@ -1,6 +1,7 @@
 <script setup>
 import CourtBadges from './CourtBadges.vue'
 import StatusChip from '../ui/StatusChip.vue'
+import Icon from '../ui/Icon.vue'
 
 // Contenu de la fiche terrain affichée en bottom sheet (mobile) ou sidebar.
 defineProps({
@@ -16,7 +17,7 @@ defineEmits(['open'])
       <StatusChip :status="court.status" />
     </div>
     <p v-if="court.rating_avg" class="mb-3 text-sm text-txt-soft">
-      <span class="text-gold">⭐ {{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
+      <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
     </p>
     <p v-else class="mb-3 text-sm text-txt-soft">Pas encore d'avis — sois le premier !</p>
 

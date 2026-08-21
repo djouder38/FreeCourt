@@ -59,7 +59,7 @@ async function searchAddress() {
     <!-- Instruction -->
     <div class="mx-auto mt-3">
       <p class="rounded-full bg-black/80 px-5 py-2.5 text-sm font-semibold shadow-lg">
-        {{ mapStore.pinLngLat ? 'Ajuste le pin, puis confirme 👇' : 'Tape sur la carte pour placer ton terrain 🏀' }}
+        {{ mapStore.pinLngLat ? 'Ajuste le pin, puis confirme' : 'Tape sur la carte pour placer ton terrain' }}
       </p>
     </div>
 

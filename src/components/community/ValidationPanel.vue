@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
 import FlagIssue from './FlagIssue.vue'
+import Icon from '../ui/Icon.vue'
 
 // Validation communautaire : "le terrain existe", "les infos sont bonnes",
 // ou signalement d'un problème. 5 validations => terrain verrouillé + validé.
@@ -35,25 +36,25 @@ async function validate(type) {
       {{ court.validation_count }}/5 validations — à 5, le terrain est verrouillé et certifié.
     </p>
 
-    <p v-if="done" class="text-sm font-semibold text-ok">Merci pour le coup de main ! 🏀</p>
+    <p v-if="done" class="text-sm font-semibold text-ok">Merci pour le coup de main !</p>
     <div v-else class="flex flex-wrap gap-2">
       <button
-        class="rounded-full border border-ok/50 bg-ok/10 px-4 py-2 text-sm font-semibold text-ok"
+        class="inline-flex items-center gap-1.5 rounded-full border border-ok/50 bg-ok/10 px-4 py-2 text-sm font-semibold text-ok"
         @click="validate('existence')"
       >
-        ✅ Il existe
+        <Icon name="check" :size="16" /> Il existe
       </button>
       <button
-        class="rounded-full border border-edge bg-surface px-4 py-2 text-sm font-semibold"
+        class="inline-flex items-center gap-1.5 rounded-full border border-edge bg-surface px-4 py-2 text-sm font-semibold"
         @click="validate('info_correct')"
       >
-        👌 Infos correctes
+        <Icon name="checkCircle" :size="16" /> Infos correctes
       </button>
       <button
-        class="rounded-full border border-bad-soft/50 bg-bad/10 px-4 py-2 text-sm font-semibold text-bad-soft"
+        class="inline-flex items-center gap-1.5 rounded-full border border-bad-soft/50 bg-bad/10 px-4 py-2 text-sm font-semibold text-bad-soft"
         @click="flagOpen = true"
       >
-        🚩 Un problème
+        <Icon name="flag" :size="16" /> Un problème
       </button>
     </div>
     <p v-if="error" class="mt-2 text-xs text-bad-soft">{{ error }}</p>

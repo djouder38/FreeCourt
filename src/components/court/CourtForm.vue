@@ -1,6 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { SURFACE_LABELS, CONDITION_LABELS, TRAFFIC_LABELS } from '../../services/labels.js'
+import Icon from '../ui/Icon.vue'
 
 // Formulaire ajout/édition : sélecteurs visuels, nom obligatoire.
 const props = defineProps({
@@ -58,7 +59,7 @@ function submit() {
           :class="form.surface === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="toggle('surface', key)"
         >
-          <span>{{ cfg.icon }}</span>{{ cfg.label }}
+          <Icon :name="cfg.icon" :size="18" />{{ cfg.label }}
         </button>
       </div>
     </fieldset>
@@ -74,7 +75,7 @@ function submit() {
           :class="form.condition === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="toggle('condition', key)"
         >
-          <span class="text-base">{{ cfg.icon }}</span>{{ cfg.label }}
+          <Icon :name="cfg.icon" :size="18" />{{ cfg.label }}
         </button>
       </div>
     </fieldset>
@@ -109,9 +110,10 @@ function submit() {
     <button
       type="submit"
       :disabled="submitting"
-      class="w-full rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25 disabled:opacity-50"
+      class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25 disabled:opacity-50"
     >
-      {{ submitting ? 'Ajout en cours…' : 'Ajouter le terrain 🏀' }}
+      <Icon name="ball" :size="18" />
+      {{ submitting ? 'Ajout en cours…' : 'Ajouter le terrain' }}
     </button>
   </form>
 </template>

@@ -8,6 +8,7 @@ import CourtRating from '../components/court/CourtRating.vue'
 import ValidationPanel from '../components/community/ValidationPanel.vue'
 import StatusChip from '../components/ui/StatusChip.vue'
 import Mascot from '../components/ui/Mascot.vue'
+import Icon from '../components/ui/Icon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -37,8 +38,8 @@ onMounted(load)
 
 <template>
   <div class="mx-auto max-w-2xl px-4 pb-28 pt-4 lg:pb-8">
-    <button class="mb-4 text-sm font-semibold text-txt-soft hover:text-white" @click="router.back()">
-      ← Retour
+    <button class="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-txt-soft hover:text-white" @click="router.back()">
+      <Icon name="back" :size="16" /> Retour
     </button>
 
     <div v-if="loading" class="py-16 text-center text-txt-soft">Chargement…</div>
@@ -54,8 +55,8 @@ onMounted(load)
         <StatusChip :status="court.status" />
       </div>
       <p v-if="court.rating_avg" class="mb-3 text-sm text-txt-soft">
-        <span class="text-gold">⭐ {{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
-        <span v-if="court.locked" class="ml-2">🔒 verrouillé par la communauté</span>
+        <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
+        <span v-if="court.locked" class="ml-2 inline-flex items-center gap-1"><Icon name="lock" :size="13" />verrouillé par la communauté</span>
       </p>
 
       <CourtBadges :court="court" class="mb-4" />
@@ -66,9 +67,9 @@ onMounted(load)
         :href="`https://www.google.com/maps/dir/?api=1&destination=${court.lat},${court.lng}`"
         target="_blank"
         rel="noopener"
-        class="mb-6 inline-block rounded-full border border-edge bg-card px-5 py-2.5 text-sm font-bold uppercase tracking-wide"
+        class="mb-6 inline-flex items-center gap-2 rounded-full border border-edge bg-card px-5 py-2.5 text-sm font-bold uppercase tracking-wide"
       >
-        🧭 S'y rendre
+        <Icon name="route" :size="16" /> S'y rendre
       </a>
 
       <div class="space-y-6">

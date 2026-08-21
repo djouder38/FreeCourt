@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { STATUS_LEVELS } from '../../stores/user.js'
+import Icon from '../ui/Icon.vue'
 
 // Badge Rookie → Legend d'un contributeur.
 const props = defineProps({
@@ -22,6 +23,7 @@ const level = computed(() => STATUS_LEVELS.find((l) => l.key === props.status))
     class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider"
     :class="STYLE[status]"
   >
-    🏅 {{ level?.label ?? status }}
+    <Icon name="medal" :size="14" />
+    {{ level?.label ?? status }}
   </span>
 </template>
