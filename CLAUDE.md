@@ -19,7 +19,18 @@ l'avancement.
 - Le vote "utile" passe par la RPC `vote_helpful` (pas d'UPDATE anonyme).
 - Markers carte : composant `CourtMarker.vue` monté dans les éléments
   DOM MapLibre via `render(h(...))` — ne pas attendre l'event `load` de la
-  carte pour les dessiner (il ne se rejoue pas au remount SPA).
+  carte pour les dessiner (il ne se rejoue pas au remount SPA, et il ne
+  tire jamais si l'onglet n'est pas composité). Utiliser `style.load`.
+- Clustering : calculé côté JS avec `supercluster` (pas via la source
+  MapLibre `cluster: true`), pour garder les markers DOM custom et ne pas
+  dépendre du rendu des tuiles. `ClusterMarker.vue` = la pastille.
+- Style de carte : la palette est appliquée par `applyPalette()` dans
+  `services/mapbox.js`, en se basant sur le `source-layer` OpenMapTiles
+  (stable) plutôt que sur les ids de couches (variables selon le style).
+- Piège de vérif : quand le panneau navigateur n'est pas affiché, rien
+  n'est composité — les transitions CSS, les animations `easeTo/flyTo` et
+  l'event `load` de MapLibre ne se déclenchent pas. Neutraliser la
+  transition ou espionner l'appel plutôt que conclure à un bug.
 - GitHub : djouder38/freecourt · Vercel : projet `free-court`.
 - archive/v1-osm-leaflet/ = première version (Leaflet + Overpass), gardée
   pour référence.
