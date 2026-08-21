@@ -20,7 +20,7 @@ const badge = computed(() => {
 <template>
   <div class="fc-marker relative" :class="{ 'fc-marker--draft': court.status === 'draft' }">
     <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-      <circle cx="19" cy="19" r="17" fill="#1a1a1a" :stroke="ringColor" stroke-width="3" />
+      <circle cx="19" cy="19" r="17" class="fill-surface" :stroke="ringColor" stroke-width="3" />
       <!-- ballon -->
       <circle cx="19" cy="19" r="10" fill="#FF6B2B" />
       <path d="M9 19 H29 M19 9 V29" stroke="#1a1a1a" stroke-width="1.6" />

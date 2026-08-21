@@ -1,17 +1,19 @@
 <script setup>
 import { h, onBeforeUnmount, onMounted, ref, render, watch } from 'vue'
 import Supercluster from 'supercluster'
-import { createMap, maplibregl } from '../../services/mapbox.js'
+import { createMap, maplibregl, setMapTheme } from '../../services/mapbox.js'
 import { useCourtsStore } from '../../stores/courts.js'
 import { useMapStore } from '../../stores/map.js'
 import CourtMarker from './CourtMarker.vue'
 import ClusterMarker from './ClusterMarker.vue'
+import { useTheme } from '../../composables/useTheme.js'
 
 const emit = defineEmits(['select', 'locating'])
 
 const courtsStore = useCourtsStore()
 const mapStore = useMapStore()
 const mapEl = ref(null)
+const theme = useTheme()
 
 let map = null
 let pinMarker = null
@@ -112,8 +114,9 @@ function refresh() {
 function showPin(lngLat) {
   if (!pinMarker) {
     const el = document.createElement('div')
+    el.className = 'text-surface'
     el.innerHTML =
-      '<svg width="34" height="46" viewBox="0 0 34 46"><path d="M17 45C17 45 32 26 32 16a15 15 0 1 0-30 0c0 10 15 29 15 29Z" fill="#FF6B2B" stroke="#fff" stroke-width="2"/><circle cx="17" cy="16" r="6" fill="#fff"/></svg>'
+      '<svg width="34" height="46" viewBox="0 0 34 46"><path d="M17 45C17 45 32 26 32 16a15 15 0 1 0-30 0c0 10 15 29 15 29Z" fill="#FF6B2B" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="16" r="6" fill="currentColor"/></svg>'
     pinMarker = new maplibregl.Marker({ element: el, draggable: true, anchor: 'bottom' })
     pinMarker.on('dragend', () => {
       const p = pinMarker.getLngLat()
@@ -147,7 +150,7 @@ function locateMe() {
 defineExpose({ flyTo, locateMe })
 
 onMounted(() => {
-  map = createMap(mapEl.value, { center: mapStore.center, zoom: mapStore.zoom })
+  map = createMap(mapEl.value, { center: mapStore.center, zoom: mapStore.zoom, theme: theme.resolved.value })
 
   map.on('moveend', () => {
     const c = map.getCenter()
@@ -168,6 +171,9 @@ onMounted(() => {
 })
 
 watch(() => courtsStore.filtered, refresh)
+
+// La carte suit le theme de l app : recoloration sans rechargement de tuiles.
+watch(() => theme.resolved.value, (t) => setMapTheme(map, t))
 
 watch(
   () => mapStore.mode,

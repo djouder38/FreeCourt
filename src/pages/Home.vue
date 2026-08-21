@@ -124,7 +124,7 @@ function toggleFilter(field, key) {
       <div class="border-b border-edge p-4">
         <div class="mb-3 flex items-start justify-between gap-2">
           <div>
-            <h1 class="font-display text-3xl leading-none tracking-wide text-accent">FreeCourt</h1>
+            <h1 class="font-display text-3xl leading-none tracking-wide text-accent-text">FreeCourt</h1>
             <p class="text-xs text-txt-soft">Les terrains de basket du monde entier</p>
           </div>
           <button
@@ -145,7 +145,7 @@ function toggleFilter(field, key) {
             placeholder="Ville, quartier, adresse…"
             class="min-w-0 flex-1 rounded-xl border border-edge bg-card px-3 py-2 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
           />
-          <button class="grid place-items-center rounded-xl bg-accent px-3 text-sm font-bold text-court" :disabled="searching">
+          <button class="grid place-items-center rounded-xl bg-accent px-3 text-sm font-bold text-on-accent" :disabled="searching">
             <span v-if="searching">…</span>
             <Icon v-else name="search" :size="16" />
           </button>
@@ -163,7 +163,7 @@ function toggleFilter(field, key) {
       </div>
 
       <div v-if="selectedCourt" class="p-4">
-        <button class="mb-3 text-xs font-semibold text-txt-soft hover:text-white" @click="courtsStore.select(null)">
+        <button class="mb-3 text-xs font-semibold text-txt-soft hover:text-txt" @click="courtsStore.select(null)">
           ← Retour à la liste
         </button>
         <CourtCard :court="selectedCourt" @open="openDetail(selectedCourt.id)" />
@@ -193,14 +193,14 @@ function toggleFilter(field, key) {
       <!-- Les 2 actions principales, à parité -->
       <div class="space-y-2 border-t border-edge p-4">
         <button
-          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25"
+          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25"
           @click="findNearMe"
         >
           <Icon name="pin" :size="18" />
           Un terrain près de moi
         </button>
         <button
-          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent hover:bg-accent/10"
+          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent-text hover:bg-accent/10"
           @click="startAdd"
         >
           <Icon name="ball" :size="18" />
@@ -229,7 +229,7 @@ function toggleFilter(field, key) {
           <button
             type="submit"
             :disabled="searching"
-            class="grid shrink-0 place-items-center rounded-full bg-accent px-4 text-sm font-bold text-court shadow-lg"
+            class="grid shrink-0 place-items-center rounded-full bg-accent px-4 text-sm font-bold text-on-accent shadow-lg"
           >
             <span v-if="searching">…</span>
             <Icon v-else name="search" :size="18" />
@@ -262,7 +262,7 @@ function toggleFilter(field, key) {
       <div class="absolute left-4 z-10 transition-all" :class="searchOpen ? 'top-20 lg:top-4' : 'top-4'">
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent text-lg shadow-lg"
-          :class="courtsStore.hasActiveFilters ? 'bg-accent text-court' : 'bg-surface text-white'"
+          :class="courtsStore.hasActiveFilters ? 'bg-accent text-on-accent' : 'bg-surface text-txt'"
           aria-label="Filtres"
           @click="filtersOpen = !filtersOpen"
         >
@@ -291,14 +291,14 @@ function toggleFilter(field, key) {
         class="absolute inset-x-3 bottom-24 z-10 flex flex-col gap-2 lg:hidden"
       >
         <button
-          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 text-sm font-bold uppercase tracking-wide text-court shadow-xl shadow-accent/30"
+          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 text-sm font-bold uppercase tracking-wide text-on-accent shadow-xl shadow-accent/30"
           @click="findNearMe"
         >
           <Icon name="pin" :size="18" />
           Trouver un terrain près de moi
         </button>
         <button
-          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-surface/95 py-3 text-sm font-bold uppercase tracking-wide text-accent shadow-xl backdrop-blur"
+          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-surface/95 py-3 text-sm font-bold uppercase tracking-wide text-accent-text shadow-xl backdrop-blur"
           @click="startAdd"
         >
           <Icon name="ball" :size="18" />
@@ -317,20 +317,20 @@ function toggleFilter(field, key) {
       <!-- États chargement / erreur / géoloc (mobile) -->
       <p
         v-if="locating"
-        class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-black/85 px-4 py-2 text-center text-xs shadow-lg"
-        :class="{ 'bg-bad-soft text-court': locating === 'denied' || locating === 'unsupported' }"
+        class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-txt/85 px-4 py-2 text-center text-xs shadow-lg"
+        :class="{ 'bg-bad-soft text-on-accent': locating === 'denied' || locating === 'unsupported' }"
       >
         {{ LOCATING_MESSAGES[locating] }}
       </p>
       <p
         v-else-if="courtsStore.loading"
-        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/85 px-4 py-2 text-xs lg:hidden"
+        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-txt/85 px-4 py-2 text-xs lg:hidden"
       >
         Chargement des terrains…
       </p>
       <p
         v-else-if="courtsStore.error"
-        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad text-court px-4 py-2 text-xs font-semibold lg:hidden"
+        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad text-on-accent px-4 py-2 text-xs font-semibold lg:hidden"
       >
         {{ courtsStore.error }}
       </p>

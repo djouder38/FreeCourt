@@ -11,7 +11,7 @@ const props = defineProps({
 const STYLE = {
   rookie: 'border-edge bg-card text-txt-soft',
   regular: 'border-ok/50 bg-ok/10 text-ok',
-  baller: 'border-accent/60 bg-accent/10 text-accent',
+  baller: 'border-accent/60 bg-accent/10 text-accent-text',
   legend: 'border-gold/60 bg-gold/10 text-gold',
 }
 

@@ -33,7 +33,7 @@ async function submit() {
 </script>
 
 <template>
-  <div class="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4" @click.self="emit('close')">
+  <div class="fixed inset-0 z-50 grid place-items-center bg-txt/60 p-4" @click.self="emit('close')">
     <div class="w-full max-w-sm rounded-2xl border border-edge bg-surface p-5">
       <h3 class="mb-3 font-display text-2xl tracking-wide">Signaler un problème</h3>
       <textarea
@@ -49,7 +49,7 @@ async function submit() {
         </button>
         <button
           :disabled="submitting"
-          class="rounded-full bg-bad text-court px-4 py-2 text-sm font-bold uppercase disabled:opacity-50"
+          class="rounded-full bg-bad text-on-accent px-4 py-2 text-sm font-bold uppercase disabled:opacity-50"
           @click="submit"
         >
           {{ submitting ? 'Envoi…' : 'Signaler' }}

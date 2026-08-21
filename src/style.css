@@ -1,21 +1,65 @@
 @import 'tailwindcss';
 
+/* FreeCourt tient deux mondes : le clair est le defaut (l'app s'utilise
+   dehors en plein jour), le sombre est le mode nuit, sous les projecteurs.
+   Les valeurs ci-dessous sont le mode CLAIR ; le bloc data-theme='dark'
+   plus bas les remplace. Les couleurs de sens (or, rouge, vert) changent
+   de valeur d'un mode a l'autre : un or lisible sur du noir ne l'est pas
+   sur du beton pale. */
 @theme {
-  /* Palette FreeCourt — street ball dark */
-  --color-court: #0f0f0f;
-  --color-surface: #1a1a1a;
-  --color-card: #242424;
-  --color-edge: #333333;
-  --color-accent: #ff6b2b;
-  --color-gold: #ffd700;
-  --color-txt-soft: #9ca3af;
-  --color-ok: #22c55e;
-  --color-warn: #f59e0b;
-  --color-bad: #ef4444; /* fonds pleins : texte encre par-dessus */
-  --color-bad-soft: #f87171; /* texte rouge sur fond sombre : 5.61:1 */
+  --color-court: #f2efea; /* beton pale : fond de l'app */
+  --color-surface: #ffffff;
+  --color-card: #faf8f5;
+  --color-edge: #cfc8bd;
+  --color-txt: #1b1917;
+  --color-txt-soft: #63605b;
+  --color-accent: #ff6b2b; /* le orange de marque ne bouge jamais */
+  --color-accent-text: #b4470f; /* mais en TEXTE sur fond clair il faut le foncer */
+  --color-on-accent: #14100d; /* encre posee SUR un fond colore : ne suit jamais le theme */
+  --color-gold: #9a6b00;
+  --color-ok: #15803d;
+  --color-warn: #a35a06;
+  --color-bad: #dc2626;
+  --color-bad-soft: #b91c1c;
 
   --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+/* Mode nuit */
+:root[data-theme='dark'] {
+  --color-court: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-card: #242424;
+  --color-edge: #3a3a3a;
+  --color-txt: #ffffff;
+  --color-txt-soft: #9ca3af;
+  --color-accent: #ff6b2b;
+  --color-accent-text: #ff6b2b;
+  --color-gold: #ffd700;
+  --color-ok: #22c55e;
+  --color-warn: #f59e0b;
+  --color-bad: #ef4444;
+  --color-bad-soft: #f87171;
+}
+
+/* Avant que le JS ait pose data-theme, on suit le systeme pour eviter
+   un flash de thème inverse. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-court: #0f0f0f;
+    --color-surface: #1a1a1a;
+    --color-card: #242424;
+    --color-edge: #3a3a3a;
+    --color-txt: #ffffff;
+    --color-txt-soft: #9ca3af;
+    --color-accent-text: #ff6b2b;
+    --color-gold: #ffd700;
+    --color-ok: #22c55e;
+    --color-warn: #f59e0b;
+    --color-bad: #ef4444;
+    --color-bad-soft: #f87171;
+  }
 }
 
 html,
@@ -27,7 +71,7 @@ body,
 
 body {
   background: var(--color-court);
-  color: #fff;
+  color: var(--color-txt);
   font-family: var(--font-sans);
   overscroll-behavior: none;
 }
@@ -37,7 +81,7 @@ body {
    a la palette. Sans ca, la selection et le focus sortent du systeme. */
 ::selection {
   background: var(--color-accent);
-  color: var(--color-court);
+  color: var(--color-on-accent);
 }
 
 :focus-visible {

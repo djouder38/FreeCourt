@@ -39,14 +39,14 @@ async function onSubmit(form) {
 
 <template>
   <div class="mx-auto max-w-lg px-4 pb-28 pt-4 lg:pb-8">
-    <button class="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-txt-soft hover:text-white" @click="router.back()">
+    <button class="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
       <Icon name="back" :size="16" /> Retour
     </button>
 
     <div v-if="!position" class="flex flex-col items-center gap-4 py-16 text-center">
       <Mascot mood="sad" />
       <p class="text-txt-soft">Commence par placer ton pin sur la carte.</p>
-      <button class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-bold uppercase tracking-wide text-court" @click="router.push('/')">
+      <button class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-bold uppercase tracking-wide text-on-accent" @click="router.push('/')">
         Retour à la carte
       </button>
     </div>

@@ -48,7 +48,7 @@ async function searchAddress() {
         <button
           type="submit"
           :disabled="searching"
-          class="rounded-full bg-card px-4 text-sm font-bold text-white"
+          class="rounded-full bg-card px-4 text-sm font-bold text-txt"
         >
           {{ searching ? '…' : 'OK' }}
         </button>
@@ -58,7 +58,7 @@ async function searchAddress() {
 
     <!-- Instruction -->
     <div class="mx-auto mt-3">
-      <p class="rounded-full bg-black/80 px-5 py-2.5 text-sm font-semibold shadow-lg">
+      <p class="rounded-full bg-txt/85 px-5 py-2.5 text-sm font-semibold shadow-lg">
         {{ mapStore.pinLngLat ? 'Ajuste le pin, puis confirme' : 'Tape sur la carte pour placer ton terrain' }}
       </p>
     </div>
@@ -73,7 +73,7 @@ async function searchAddress() {
       </button>
       <button
         v-if="mapStore.pinLngLat"
-        class="rounded-full bg-accent text-court px-8 py-3 text-sm font-bold uppercase tracking-wide shadow-lg shadow-accent/30"
+        class="rounded-full bg-accent text-on-accent px-8 py-3 text-sm font-bold uppercase tracking-wide shadow-lg shadow-accent/30"
         @click="emit('confirm')"
       >
         C'est ici ✓

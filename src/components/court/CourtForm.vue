@@ -110,7 +110,7 @@ function submit() {
     <button
       type="submit"
       :disabled="submitting"
-      class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25 disabled:opacity-50"
+      class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25 disabled:opacity-50"
     >
       <Icon name="ball" :size="18" />
       {{ submitting ? 'Ajout en cours…' : 'Ajouter le terrain' }}

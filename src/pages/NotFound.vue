@@ -10,7 +10,7 @@ const router = useRouter()
     <Mascot mood="sad" :size="120" />
     <h1 class="font-display text-5xl tracking-wide">Airball !</h1>
     <p class="text-txt-soft">Cette page n'existe pas.</p>
-    <button class="rounded-full bg-accent text-court px-6 py-3 font-bold uppercase tracking-wide" @click="router.push('/')">
+    <button class="rounded-full bg-accent text-on-accent px-6 py-3 font-bold uppercase tracking-wide" @click="router.push('/')">
       Retour à la carte
     </button>
   </div>

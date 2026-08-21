@@ -78,7 +78,7 @@ async function vote(review) {
       <button
         type="button"
         :disabled="submitting"
-        class="rounded-full bg-accent text-court px-5 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
+        class="rounded-full bg-accent text-on-accent px-5 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
         @click="submit"
       >
         {{ submitting ? 'Envoi…' : 'Poster' }}
@@ -92,8 +92,8 @@ async function vote(review) {
         <p v-if="review.text" class="mb-2 text-sm leading-relaxed">{{ review.text }}</p>
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 text-xs font-semibold text-txt-soft hover:text-white"
-          :class="{ 'text-accent': votedIds.has(review.id) }"
+          class="inline-flex items-center gap-1.5 text-xs font-semibold text-txt-soft hover:text-txt"
+          :class="{ 'text-accent-text': votedIds.has(review.id) }"
           @click="vote(review)"
         >
           <Icon name="thumb" :size="14" /> Utile ({{ review.helpful_count }})

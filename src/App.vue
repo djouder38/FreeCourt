@@ -1,14 +1,23 @@
 <script setup>
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TabBar from './components/ui/TabBar.vue'
 import Mascot from './components/ui/Mascot.vue'
 import { useToast } from './composables/useToast.js'
 import { useMapStore } from './stores/map.js'
+import { useTheme } from './composables/useTheme.js'
 
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 const mapStore = useMapStore()
+
+useTheme().mount()
+
+// Ecrans de tache : la tab bar les recouvrirait (le bouton de soumission de
+// /add tombait littéralement dessous). Ils ont leur propre bouton retour.
+const TASK_ROUTES = ['add', 'court']
+const showTabBar = computed(() => !TASK_ROUTES.includes(route.name))
 
 async function onSearch() {
   // La recherche s'affiche sur la carte : si on n'y est pas, on y retourne.
@@ -27,7 +36,7 @@ async function onSearch() {
       <router-view />
     </main>
 
-    <TabBar @search="onSearch" />
+    <TabBar v-if="showTabBar" @search="onSearch" />
 
     <!-- Toast global avec mascotte -->
     <Transition
