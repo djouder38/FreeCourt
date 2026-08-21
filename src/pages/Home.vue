@@ -291,7 +291,14 @@ function toggleFilter(field, key) {
 
       <!-- Recherche : la loupe reste en haut à droite et le panneau se
            déploie vers le bas, en miroir des filtres à gauche. -->
-      <div v-if="mapStore.mode === 'browse'" ref="searchBox" class="absolute right-4 top-4 z-20 lg:hidden">
+      <!-- items-end : le conteneur s'élargit à la taille du panneau quand il
+           s'ouvre. Sans cet alignement, le bouton suivrait le bord gauche du
+           conteneur et se déplacerait à l'ouverture. -->
+      <div
+        v-if="mapStore.mode === 'browse'"
+        ref="searchBox"
+        class="absolute right-4 top-4 z-20 flex flex-col items-end lg:hidden"
+      >
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-lg"
           aria-label="Chercher un terrain ou un lieu"
