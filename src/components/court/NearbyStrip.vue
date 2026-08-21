@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { formatDistance } from '../../services/geo.js'
 import { SURFACE_LABELS, CONDITION_LABELS } from '../../services/labels.js'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 
 // Ce que le joueur veut en arrivant : les terrains proches, pas une question.
 // Tant qu'on ne connaît pas sa position, la bande ne s'affiche pas du tout —
@@ -35,7 +36,7 @@ const visible = computed(() => props.courts.slice(0, 10))
         <div class="flex items-center gap-2 text-xs text-txt-soft">
           <span v-if="court.surface" class="inline-flex items-center gap-1">
             <Icon :name="SURFACE_LABELS[court.surface].icon" :size="13" />
-            {{ SURFACE_LABELS[court.surface].label }}
+            {{ t(SURFACE_LABELS[court.surface].key) }}
           </span>
           <span
             v-if="court.condition"
@@ -43,7 +44,7 @@ const visible = computed(() => props.courts.slice(0, 10))
             :class="CONDITION_LABELS[court.condition].color"
           >
             <Icon :name="CONDITION_LABELS[court.condition].icon" :size="13" />
-            {{ CONDITION_LABELS[court.condition].label }}
+            {{ t(CONDITION_LABELS[court.condition].key) }}
           </span>
         </div>
       </button>
@@ -52,7 +53,7 @@ const visible = computed(() => props.courts.slice(0, 10))
         v-if="visible.length === 0"
         class="w-full rounded-2xl border border-edge bg-surface/95 p-4 text-center text-sm text-txt-soft shadow-xl backdrop-blur"
       >
-        Aucun terrain ne correspond ici.
+        {{ t('map.noneNearby') }}
       </div>
     </div>
   </div>

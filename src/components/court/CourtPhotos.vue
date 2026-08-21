@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 import { useToast } from '../../composables/useToast.js'
 
 // Galerie 3 photos max + upload vers Supabase Storage.
@@ -21,22 +22,22 @@ async function onFile(e) {
   e.target.value = ''
   if (!file) return
   if (!file.type.startsWith('image/')) {
-    error.value = 'Choisis une image.'
+    error.value = t('court.photoNotImage')
     return
   }
   if (file.size > 5 * 1024 * 1024) {
-    error.value = 'Image trop lourde (5 Mo max).'
+    error.value = t('court.photoTooHeavy')
     return
   }
   uploading.value = true
   error.value = null
   try {
     await courtsStore.addPhoto(props.court.id, file)
-    toast.show('Photo ajoutée au terrain.')
+    toast.show(t('toast.photoAdded'))
     emit('uploaded')
   } catch (err) {
     console.error(err)
-    error.value = "L'upload a échoué, réessaie."
+    error.value = t('court.photoFailed')
   } finally {
     uploading.value = false
   }
@@ -45,7 +46,7 @@ async function onFile(e) {
 
 <template>
   <section>
-    <h3 class="mb-2 font-display text-xl tracking-wide">Photos</h3>
+    <h3 class="mb-2 font-display text-xl tracking-wide">{{ t('court.photos') }}</h3>
     <div class="flex gap-2 overflow-x-auto">
       <img
         v-for="photo in court.photos.slice(0, 3)"
@@ -63,11 +64,11 @@ async function onFile(e) {
         @click="fileInput.click()"
       >
         <Icon v-if="!uploading" name="camera" :size="20" />
-        {{ uploading ? 'Envoi…' : 'Ajouter' }}
+        {{ uploading ? t('court.uploading') : t('court.addPhoto') }}
       </button>
     </div>
     <p v-if="court.photos.length === 0 && !uploading" class="mt-2 text-xs text-txt-soft">
-      Aucune photo pour l'instant (3 max par terrain).
+      {{ t('court.noPhoto') }}
     </p>
     <p v-if="error" class="mt-2 text-xs text-bad-soft">{{ error }}</p>
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFile" />

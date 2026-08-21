@@ -1,3 +1,5 @@
+import { t, currentLocale } from '../i18n/index.js'
+
 // Distance à vol d'oiseau entre deux points (formule de haversine).
 // Le joueur veut savoir « c'est loin ? » ; l'itinéraire réel est délégué à
 // Google Maps, donc une distance à vol d'oiseau suffit et ne coûte aucun appel.
@@ -16,10 +18,14 @@ export function distanceMeters(a, b) {
 }
 
 // « 450 m », « 2,3 km », « 87 km » — jamais plus de précision que nécessaire.
+// Le séparateur décimal suit la langue : virgule en français, point en anglais.
 export function formatDistance(meters) {
   if (meters == null) return null
   if (meters < 1000) return `${Math.round(meters / 10) * 10} m`
-  if (meters < 10000) return `${(meters / 1000).toFixed(1).replace('.', ',')} km`
+  if (meters < 10000) {
+    const km = (meters / 1000).toFixed(1)
+    return `${currentLocale() === 'fr' ? km.replace('.', ',') : km} km`
+  }
   return `${Math.round(meters / 1000)} km`
 }
 
@@ -30,13 +36,13 @@ export function formatAge(iso) {
   const then = new Date(iso).getTime()
   if (Number.isNaN(then)) return null
   const days = Math.floor((Date.now() - then) / 86400000)
-  if (days <= 0) return "aujourd'hui"
-  if (days === 1) return 'hier'
-  if (days < 30) return `il y a ${days} jours`
+  if (days <= 0) return t('units.today')
+  if (days === 1) return t('units.yesterday')
+  if (days < 30) return t('units.daysAgo', { n: days })
   const months = Math.floor(days / 30)
-  if (months < 12) return `il y a ${months} mois`
+  if (months < 12) return t('units.monthsAgo', { n: months })
   const years = Math.floor(months / 12)
-  return years === 1 ? 'il y a un an' : `il y a ${years} ans`
+  return years === 1 ? t('units.oneYearAgo') : t('units.yearsAgo', { n: years })
 }
 
 // Au-delà de 6 mois sans confirmation, l'information est declarée douteuse.

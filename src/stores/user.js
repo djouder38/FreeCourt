@@ -1,11 +1,14 @@
 import { defineStore } from 'pinia'
+import { t } from '../i18n/index.js'
 
 // Statuts contributeurs (spec) : seuils de score et quotas d'ajout.
+// Les noms de statut (Rookie, Baller, Legend) sont du vocabulaire basket :
+// ils ne se traduisent pas. Les quotas, si.
 export const STATUS_LEVELS = [
-  { key: 'rookie', label: 'Rookie', minScore: 0, quota: '2 terrains/semaine' },
-  { key: 'regular', label: 'Regular', minScore: 50, quota: '5 terrains/semaine' },
-  { key: 'baller', label: 'Baller', minScore: 200, quota: '10 terrains/semaine' },
-  { key: 'legend', label: 'Legend', minScore: 500, quota: 'Illimité' },
+  { key: 'rookie', label: 'Rookie', minScore: 0, quotaKey: 'quota.rookie' },
+  { key: 'regular', label: 'Regular', minScore: 50, quotaKey: 'quota.regular' },
+  { key: 'baller', label: 'Baller', minScore: 200, quotaKey: 'quota.baller' },
+  { key: 'legend', label: 'Legend', minScore: 500, quotaKey: 'quota.legend' },
 ]
 
 const SESSION_KEY = 'freecourt:session'
@@ -49,11 +52,11 @@ export const useUserStore = defineStore('user', {
       this.error = null
 
       if (!DEV_ID || !DEV_CODE) {
-        this.error = "Aucun accès de développement configuré (VITE_ADMIN_ID / VITE_ADMIN_CODE)."
+        this.error = t('profile.noDevAccess')
         return false
       }
       if (id?.trim() !== DEV_ID || code !== DEV_CODE) {
-        this.error = 'Identifiant ou code incorrect.'
+        this.error = t('profile.wrongCredentials')
         return false
       }
 

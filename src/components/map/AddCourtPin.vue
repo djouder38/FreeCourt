@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useMapStore } from '../../stores/map.js'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 
 // Overlay du mode "pin ton terrain". Tout est groupé en bas, près du pouce
 // et près du bouton de confirmation : posé en haut, ce bloc recouvrait les
@@ -24,12 +25,12 @@ async function searchAddress() {
     )
     const results = await res.json()
     if (results.length === 0) {
-      searchError.value = 'Adresse introuvable.'
+      searchError.value = t('pin.addressNotFound')
       return
     }
     emit('goto', { lng: parseFloat(results[0].lon), lat: parseFloat(results[0].lat) })
   } catch {
-    searchError.value = 'Recherche indisponible.'
+    searchError.value = t('map.searchUnavailable')
   } finally {
     searching.value = false
   }
@@ -45,8 +46,8 @@ async function searchAddress() {
       >
         {{
           mapStore.pinLngLat
-            ? 'Ajuste le pin, puis confirme'
-            : 'Tape sur la carte pour placer ton terrain'
+            ? t('pin.adjust')
+            : t('pin.place')
         }}
       </p>
 
@@ -55,14 +56,14 @@ async function searchAddress() {
         <input
           v-model="address"
           type="search"
-          placeholder="Ou cherche une adresse…"
+          :placeholder="t('pin.addressPlaceholder')"
           class="min-w-0 flex-1 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm shadow-lg outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
         />
         <button
           type="submit"
           :disabled="searching"
           class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-surface text-txt shadow-lg disabled:opacity-50"
-          aria-label="Chercher cette adresse"
+          :aria-label="t('pin.searchAddress')"
         >
           <span v-if="searching" class="text-sm font-bold">…</span>
           <Icon v-else name="search" :size="18" />
@@ -76,7 +77,7 @@ async function searchAddress() {
           class="min-h-12 rounded-full border border-edge bg-surface px-6 py-3 text-sm font-bold uppercase tracking-wide shadow-lg"
           @click="emit('cancel')"
         >
-          Annuler
+          {{ t('pin.cancel') }}
         </button>
         <button
           v-if="mapStore.pinLngLat"
@@ -84,7 +85,7 @@ async function searchAddress() {
           @click="emit('confirm')"
         >
           <Icon name="check" :size="16" />
-          C'est ici
+          {{ t('pin.confirm') }}
         </button>
       </div>
     </div>

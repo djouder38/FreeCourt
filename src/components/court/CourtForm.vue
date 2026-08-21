@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue'
 import { SURFACE_LABELS, CONDITION_LABELS, TRAFFIC_LABELS } from '../../services/labels.js'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 
 // Formulaire ajout/édition : sélecteurs visuels, nom obligatoire.
 const props = defineProps({
@@ -26,7 +27,7 @@ function toggle(field, value) {
 
 function submit() {
   if (!form.name.trim()) {
-    nameError.value = 'Donne un nom à ton terrain.'
+    nameError.value = t('form.nameRequired')
     return
   }
   nameError.value = null
@@ -37,19 +38,19 @@ function submit() {
 <template>
   <form class="space-y-5" @submit.prevent="submit">
     <div>
-      <label class="mb-1.5 block text-sm font-semibold" for="court-name">Nom du terrain *</label>
+      <label class="mb-1.5 block text-sm font-semibold" for="court-name">{{ t('form.name') }}</label>
       <input
         id="court-name"
         v-model="form.name"
         type="text"
-        placeholder="Ex : Playground des Glacis"
+        :placeholder="t('form.namePlaceholder')"
         class="w-full rounded-xl border border-edge bg-surface px-4 py-3 outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
       />
       <p v-if="nameError" class="mt-1 text-xs text-bad-soft">{{ nameError }}</p>
     </div>
 
     <fieldset>
-      <legend class="mb-1.5 text-sm font-semibold">Surface</legend>
+      <legend class="mb-1.5 text-sm font-semibold">{{ t('form.surface') }}</legend>
       <div class="grid grid-cols-2 gap-2">
         <button
           v-for="(cfg, key) in SURFACE_LABELS"
@@ -59,13 +60,13 @@ function submit() {
           :class="form.surface === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="toggle('surface', key)"
         >
-          <Icon :name="cfg.icon" :size="18" />{{ cfg.label }}
+          <Icon :name="cfg.icon" :size="18" />{{ t(cfg.key) }}
         </button>
       </div>
     </fieldset>
 
     <fieldset>
-      <legend class="mb-1.5 text-sm font-semibold">État</legend>
+      <legend class="mb-1.5 text-sm font-semibold">{{ t('form.condition') }}</legend>
       <div class="grid grid-cols-3 gap-2">
         <button
           v-for="(cfg, key) in CONDITION_LABELS"
@@ -75,13 +76,13 @@ function submit() {
           :class="form.condition === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="toggle('condition', key)"
         >
-          <Icon :name="cfg.icon" :size="18" />{{ cfg.label }}
+          <Icon :name="cfg.icon" :size="18" />{{ t(cfg.key) }}
         </button>
       </div>
     </fieldset>
 
     <fieldset>
-      <legend class="mb-1.5 text-sm font-semibold">Fréquentation</legend>
+      <legend class="mb-1.5 text-sm font-semibold">{{ t('form.traffic') }}</legend>
       <div class="grid grid-cols-3 gap-2">
         <button
           v-for="(cfg, key) in TRAFFIC_LABELS"
@@ -91,18 +92,18 @@ function submit() {
           :class="form.traffic === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="toggle('traffic', key)"
         >
-          <Icon :name="cfg.icon" :size="18" />{{ cfg.label }}
+          <Icon :name="cfg.icon" :size="18" />{{ t(cfg.key) }}
         </button>
       </div>
     </fieldset>
 
     <div>
-      <label class="mb-1.5 block text-sm font-semibold" for="court-desc">Description (optionnel)</label>
+      <label class="mb-1.5 block text-sm font-semibold" for="court-desc">{{ t('form.description') }}</label>
       <textarea
         id="court-desc"
         v-model="form.description"
         rows="3"
-        placeholder="Ambiance, accès, horaires sympas…"
+        :placeholder="t('form.descriptionPlaceholder')"
         class="w-full rounded-xl border border-edge bg-surface px-4 py-3 outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
       ></textarea>
     </div>
@@ -113,7 +114,7 @@ function submit() {
       class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25 disabled:opacity-50"
     >
       <Icon name="ball" :size="18" />
-      {{ submitting ? 'Ajout en cours…' : 'Ajouter le terrain' }}
+      {{ submitting ? t('form.submitting') : t('form.submit') }}
     </button>
   </form>
 </template>

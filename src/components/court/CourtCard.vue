@@ -2,6 +2,7 @@
 import CourtBadges from './CourtBadges.vue'
 import StatusChip from '../ui/StatusChip.vue'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 
 // Contenu de la fiche terrain affichée en bottom sheet (mobile) ou sidebar.
 defineProps({
@@ -17,9 +18,9 @@ defineEmits(['open'])
       <StatusChip :status="court.status" />
     </div>
     <p v-if="court.rating_avg" class="mb-3 text-sm text-txt-soft">
-      <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
+      <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ t('court.reviewCount', { count: court.rating_count }) }}
     </p>
-    <p v-else class="mb-3 text-sm text-txt-soft">Pas encore d'avis — sois le premier !</p>
+    <p v-else class="mb-3 text-sm text-txt-soft">{{ t('court.noReview') }}</p>
 
     <CourtBadges :court="court" class="mb-4" />
 
@@ -42,7 +43,7 @@ defineEmits(['open'])
       class="w-full rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25 hover:bg-accent/90"
       @click="$emit('open')"
     >
-      Voir le terrain
+      {{ t('court.open') }}
     </button>
   </article>
 </template>

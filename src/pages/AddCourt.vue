@@ -6,6 +6,7 @@ import { useToast } from '../composables/useToast.js'
 import CourtForm from '../components/court/CourtForm.vue'
 import Mascot from '../components/ui/Mascot.vue'
 import Icon from '../components/ui/Icon.vue'
+import { t } from '../i18n/index.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -26,11 +27,11 @@ async function onSubmit(form) {
   error.value = null
   try {
     await courtsStore.addCourt({ ...form, lat: position.value.lat, lng: position.value.lng })
-    toast.show('Terrain ajouté ! La communauté va le valider.')
+    toast.show(t('toast.courtAdded'))
     router.push('/')
   } catch (err) {
     console.error(err)
-    error.value = "L'ajout a échoué, réessaie."
+    error.value = t('form.failed')
   } finally {
     submitting.value = false
   }
@@ -40,23 +41,21 @@ async function onSubmit(form) {
 <template>
   <div class="mx-auto max-w-lg px-4 pb-28 pt-4 lg:pb-8">
     <button class="-mx-2 mb-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
-      <Icon name="back" :size="16" /> Retour
+      <Icon name="back" :size="16" /> {{ t('nav.back') }}
     </button>
 
     <div v-if="!position" class="flex flex-col items-center gap-4 py-16 text-center">
       <Mascot mood="sad" />
-      <p class="text-txt-soft">Commence par placer ton pin sur la carte.</p>
+      <p class="text-txt-soft">{{ t('form.needPin') }}</p>
       <button class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-bold uppercase tracking-wide text-on-accent" @click="router.push('/')">
-        Retour à la carte
+        {{ t('nav.backToMap') }}
       </button>
     </div>
 
     <template v-else>
-      <h1 class="mb-1 font-display text-4xl tracking-wide">Nouveau terrain</h1>
+      <h1 class="mb-1 font-display text-4xl tracking-wide">{{ t('form.newCourt') }}</h1>
       <p class="mb-6 text-sm text-txt-soft">
-        <Icon name="pin" :size="14" class="mr-1 inline align-text-bottom" />{{ position.lat.toFixed(5) }},
-        {{ position.lng.toFixed(5) }} — il sera « à vérifier »
-        jusqu'à 5 validations de la communauté.
+        <Icon name="pin" :size="14" class="mr-1 inline align-text-bottom" />{{ t('form.position', { lat: position.lat.toFixed(5), lng: position.lng.toFixed(5) }) }}
       </p>
       <CourtForm :submitting="submitting" @submit="onSubmit" />
       <p v-if="error" class="mt-3 text-sm text-bad-soft">{{ error }}</p>

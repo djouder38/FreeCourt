@@ -7,16 +7,25 @@ import Mascot from '../components/ui/Mascot.vue'
 import Icon from '../components/ui/Icon.vue'
 import { useTheme } from '../composables/useTheme.js'
 import { useToast } from '../composables/useToast.js'
+import { useI18n } from '../i18n/index.js'
 
 const router = useRouter()
 const userStore = useUserStore()
 const theme = useTheme()
 const toast = useToast()
+const { t, locale, setLocale } = useI18n()
 
 const THEME_CHOICES = [
-  { key: 'auto', label: 'Automatique', hint: 'Suit le réglage de ton téléphone' },
-  { key: 'light', label: 'Jour', hint: 'Lisible en plein soleil' },
-  { key: 'dark', label: 'Nuit', hint: 'Pour jouer sous les projecteurs' },
+  { key: 'auto', labelKey: 'profile.themeAuto', hintKey: 'profile.themeAutoHint' },
+  { key: 'light', labelKey: 'profile.themeLight', hintKey: 'profile.themeLightHint' },
+  { key: 'dark', labelKey: 'profile.themeDark', hintKey: 'profile.themeDarkHint' },
+]
+
+// Les langues se nomment dans leur propre langue : quelqu'un qui cherche
+// l'anglais cherche « English », pas « Anglais ».
+const LANGUAGES = [
+  { key: 'fr', label: 'Français' },
+  { key: 'en', label: 'English' },
 ]
 
 const loginOpen = ref(false)
@@ -28,13 +37,13 @@ function submitLogin() {
     loginOpen.value = false
     identifier.value = ''
     code.value = ''
-    toast.show('Te voilà connecté.')
+    toast.show(t('toast.signedIn'))
   }
 }
 
 function logout() {
   userStore.logout()
-  toast.show('Déconnecté.')
+  toast.show(t('toast.signedOut'))
 }
 </script>
 
@@ -45,21 +54,21 @@ function logout() {
         class="-mx-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-semibold text-txt-soft hover:text-txt"
         @click="router.push('/')"
       >
-        <Icon name="back" :size="16" /> Retour à la carte
+        <Icon name="back" :size="16" /> {{ t('nav.backToMap') }}
       </button>
 
       <!-- Accès de développement : ouvre la connexion locale -->
       <button
         class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-card text-txt-soft hover:text-txt"
-        :aria-label="userStore.isLoggedIn ? 'Se déconnecter' : 'Se connecter'"
-        :title="userStore.isLoggedIn ? 'Se déconnecter' : 'Se connecter'"
+        :aria-label="userStore.isLoggedIn ? t('profile.signOut') : t('profile.signIn')"
+        :title="userStore.isLoggedIn ? t('profile.signOut') : t('profile.signIn')"
         @click="userStore.isLoggedIn ? logout() : (loginOpen = !loginOpen)"
       >
         <Icon :name="userStore.isLoggedIn ? 'lock' : 'user'" :size="18" />
       </button>
     </div>
 
-    <h1 class="mb-6 font-display text-4xl tracking-wide">Profil</h1>
+    <h1 class="mb-6 font-display text-4xl tracking-wide">{{ t('profile.title') }}</h1>
 
     <!-- Connecté : le compte réel -->
     <div v-if="userStore.isLoggedIn" class="rounded-2xl border border-edge bg-card p-5">
@@ -82,21 +91,20 @@ function logout() {
       </div>
       <dl class="grid grid-cols-3 gap-2 text-center">
         <div class="rounded-xl border border-edge bg-surface p-2">
-          <dt class="text-[11px] uppercase tracking-wide text-txt-soft">Score</dt>
+          <dt class="text-[11px] uppercase tracking-wide text-txt-soft">{{ t('profile.score') }}</dt>
           <dd class="font-display text-2xl">{{ userStore.profile.contribution_score }}</dd>
         </div>
         <div class="rounded-xl border border-edge bg-surface p-2">
-          <dt class="text-[11px] uppercase tracking-wide text-txt-soft">Terrains</dt>
+          <dt class="text-[11px] uppercase tracking-wide text-txt-soft">{{ t('profile.courtsAdded') }}</dt>
           <dd class="font-display text-2xl">{{ userStore.profile.courts_added }}</dd>
         </div>
         <div class="rounded-xl border border-edge bg-surface p-2">
-          <dt class="text-[11px] uppercase tracking-wide text-txt-soft">Validations</dt>
+          <dt class="text-[11px] uppercase tracking-wide text-txt-soft">{{ t('profile.validationsDone') }}</dt>
           <dd class="font-display text-2xl">{{ userStore.profile.validations_done }}</dd>
         </div>
       </dl>
       <p class="mt-3 text-xs text-txt-soft">
-        Session locale de développement. Les contributions restent anonymes tant que
-        Supabase Auth n'est pas branché.
+        {{ t('profile.devSession') }}
       </p>
     </div>
 
@@ -107,7 +115,7 @@ function logout() {
       @submit.prevent="submitLogin"
     >
       <div>
-        <label class="mb-1.5 block text-sm font-semibold" for="login-id">Identifiant</label>
+        <label class="mb-1.5 block text-sm font-semibold" for="login-id">{{ t('profile.identifier') }}</label>
         <input
           id="login-id"
           v-model="identifier"
@@ -117,7 +125,7 @@ function logout() {
         />
       </div>
       <div>
-        <label class="mb-1.5 block text-sm font-semibold" for="login-code">Code</label>
+        <label class="mb-1.5 block text-sm font-semibold" for="login-code">{{ t('profile.code') }}</label>
         <input
           id="login-code"
           v-model="code"
@@ -131,22 +139,22 @@ function logout() {
         type="submit"
         class="min-h-11 w-full rounded-full bg-accent px-6 font-bold uppercase tracking-wide text-on-accent"
       >
-        Se connecter
+        {{ t('profile.signIn') }}
       </button>
     </form>
 
     <!-- Déconnecté : l'invitation -->
     <div v-else class="flex flex-col items-center gap-4 rounded-2xl border border-edge bg-card p-8 text-center">
       <Mascot />
-      <p class="font-semibold">Bientôt : ton compte contributeur</p>
+      <p class="font-semibold">{{ t('profile.soon') }}</p>
       <p class="text-sm text-txt-soft">
-        Ajoute des terrains, valide ceux des autres et grimpe de Rookie à Legend.
+        {{ t('profile.soonHint') }}
       </p>
     </div>
 
     <!-- Apparence : le mode jour est le defaut, l'app s'utilise dehors -->
     <section class="mt-8">
-      <h2 class="mb-3 font-display text-2xl tracking-wide">Apparence</h2>
+      <h2 class="mb-3 font-display text-2xl tracking-wide">{{ t('profile.appearance') }}</h2>
       <div class="grid grid-cols-3 gap-2">
         <button
           v-for="choice in THEME_CHOICES"
@@ -156,14 +164,32 @@ function logout() {
           :class="theme.mode.value === choice.key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="theme.set(choice.key)"
         >
-          <span class="block text-sm font-bold">{{ choice.label }}</span>
-          <span class="mt-0.5 block text-[11px] leading-tight text-txt-soft">{{ choice.hint }}</span>
+          <span class="block text-sm font-bold">{{ t(choice.labelKey) }}</span>
+          <span class="mt-0.5 block text-[11px] leading-tight text-txt-soft">{{ t(choice.hintKey) }}</span>
         </button>
       </div>
     </section>
 
     <section class="mt-8">
-      <h2 class="mb-3 font-display text-2xl tracking-wide">Les statuts</h2>
+      <h2 class="mb-3 font-display text-2xl tracking-wide">{{ t('profile.language') }}</h2>
+      <div class="grid grid-cols-2 gap-2">
+        <button
+          v-for="lang in LANGUAGES"
+          :key="lang.key"
+          type="button"
+          class="min-h-12 rounded-2xl border px-3 py-3 text-center text-sm font-bold transition"
+          :class="locale === lang.key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
+          :lang="lang.key"
+          :aria-current="locale === lang.key ? 'true' : undefined"
+          @click="setLocale(lang.key)"
+        >
+          {{ lang.label }}
+        </button>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="mb-3 font-display text-2xl tracking-wide">{{ t('profile.statuses') }}</h2>
       <ul class="space-y-2">
         <li
           v-for="level in STATUS_LEVELS"
@@ -171,7 +197,7 @@ function logout() {
           class="flex items-center justify-between rounded-2xl border border-edge bg-card px-4 py-3"
         >
           <ContributorBadge :status="level.key" />
-          <span class="text-xs text-txt-soft">{{ level.minScore }} pts · {{ level.quota }}</span>
+          <span class="text-xs text-txt-soft">{{ t('profile.quotaPoints', { points: level.minScore, quota: t(level.quotaKey) }) }}</span>
         </li>
       </ul>
     </section>

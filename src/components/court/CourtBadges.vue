@@ -1,6 +1,7 @@
 <script setup>
 import { SURFACE_LABELS, CONDITION_LABELS, TRAFFIC_LABELS } from '../../services/labels.js'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 
 defineProps({
   court: { type: Object, required: true },
@@ -15,7 +16,7 @@ defineProps({
       class="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1 text-xs font-semibold"
     >
       <Icon :name="SURFACE_LABELS[court.surface].icon" :size="14" />
-      <template v-if="!compact">{{ SURFACE_LABELS[court.surface].label }}</template>
+      <template v-if="!compact">{{ t(SURFACE_LABELS[court.surface].key) }}</template>
     </span>
     <span
       v-if="court.condition"
@@ -23,14 +24,14 @@ defineProps({
       :class="CONDITION_LABELS[court.condition].color"
     >
       <Icon :name="CONDITION_LABELS[court.condition].icon" :size="14" />
-      <template v-if="!compact">{{ CONDITION_LABELS[court.condition].label }}</template>
+      <template v-if="!compact">{{ t(CONDITION_LABELS[court.condition].key) }}</template>
     </span>
     <span
       v-if="court.traffic"
       class="inline-flex items-center gap-1.5 rounded-full border border-edge bg-card px-3 py-1 text-xs font-semibold"
     >
       <Icon :name="TRAFFIC_LABELS[court.traffic].icon" :size="14" />
-      <template v-if="!compact">{{ TRAFFIC_LABELS[court.traffic].label }}</template>
+      <template v-if="!compact">{{ t(TRAFFIC_LABELS[court.traffic].key) }}</template>
     </span>
   </div>
 </template>

@@ -9,6 +9,7 @@ import {
   uploadCourtPhoto,
 } from '../services/supabase.js'
 import { distanceMeters } from '../services/geo.js'
+import { t } from '../i18n/index.js'
 
 export const useCourtsStore = defineStore('courts', {
   state: () => ({
@@ -65,7 +66,7 @@ export const useCourtsStore = defineStore('courts', {
       try {
         this.courts = await fetchCourtsWithRelations()
       } catch (e) {
-        this.error = 'Impossible de charger les terrains.'
+        this.error = t('map.loadError')
         console.error(e)
       } finally {
         this.loading = false

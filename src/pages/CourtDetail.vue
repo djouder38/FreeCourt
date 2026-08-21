@@ -10,6 +10,7 @@ import StatusChip from '../components/ui/StatusChip.vue'
 import Mascot from '../components/ui/Mascot.vue'
 import Icon from '../components/ui/Icon.vue'
 import { formatAge, isStale } from '../services/geo.js'
+import { t } from '../i18n/index.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -28,7 +29,7 @@ async function load() {
     court.value = await courtsStore.loadDetail(route.params.id)
   } catch (err) {
     console.error(err)
-    error.value = 'Terrain introuvable.'
+    error.value = t('court.notFound')
   } finally {
     loading.value = false
   }
@@ -40,10 +41,10 @@ onMounted(load)
 <template>
   <div class="mx-auto max-w-2xl px-4 pb-28 pt-4 lg:pb-8">
     <button class="-mx-2 mb-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
-      <Icon name="back" :size="16" /> Retour
+      <Icon name="back" :size="16" /> {{ t('nav.back') }}
     </button>
 
-    <div v-if="loading" class="py-16 text-center text-txt-soft">Chargement…</div>
+    <div v-if="loading" class="py-16 text-center text-txt-soft">{{ t('map.loading') }}</div>
 
     <div v-else-if="error" class="flex flex-col items-center gap-4 py-16">
       <Mascot mood="sad" />
@@ -56,8 +57,8 @@ onMounted(load)
         <StatusChip :status="court.status" />
       </div>
       <p v-if="court.rating_avg" class="mb-3 text-sm text-txt-soft">
-        <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ court.rating_count }} avis
-        <span v-if="court.locked" class="ml-2 inline-flex items-center gap-1"><Icon name="lock" :size="13" />validé par la communauté</span>
+        <span class="inline-flex items-center gap-1 text-gold"><Icon name="star" :size="14" filled />{{ court.rating_avg }}/5</span> · {{ t('court.reviewCount', { count: court.rating_count }) }}
+        <span v-if="court.locked" class="ml-2 inline-flex items-center gap-1"><Icon name="lock" :size="13" />{{ t('court.validatedByCommunity') }}</span>
       </p>
 
       <CourtBadges :court="court" class="mb-3" />
@@ -73,11 +74,11 @@ onMounted(load)
       >
         <Icon :name="isStale(court.updated_at || court.created_at) ? 'alert' : 'checkCircle'" :size="13" />
         <template v-if="isStale(court.updated_at || court.created_at)">
-          Décrit {{ formatAge(court.updated_at || court.created_at) }} — personne n'a confirmé depuis. Tu y es ?
+          {{ t('court.staleWarning', { age: formatAge(court.updated_at || court.created_at) }) }}
         </template>
         <template v-else>
-          Décrit {{ formatAge(court.updated_at || court.created_at) }}
-          <template v-if="court.validation_count"> · confirmé par {{ court.validation_count }} joueur{{ court.validation_count > 1 ? 's' : '' }}</template>
+          {{ t('court.describedAgo', { age: formatAge(court.updated_at || court.created_at) }) }}
+          <template v-if="court.validation_count"> · {{ t('court.confirmedBy', { count: court.validation_count, s: court.validation_count > 1 ? 's' : '' }) }}</template>
         </template>
       </p>
 
@@ -89,7 +90,7 @@ onMounted(load)
         rel="noopener"
         class="mb-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25"
       >
-        <Icon name="route" :size="16" /> S'y rendre
+        <Icon name="route" :size="16" /> {{ t('court.directions') }}
       </a>
 
       <div class="space-y-6">

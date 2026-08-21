@@ -6,6 +6,7 @@ import { useCourtsStore } from '../../stores/courts.js'
 import { useMapStore } from '../../stores/map.js'
 import CourtMarker from './CourtMarker.vue'
 import { CONDITION_LABELS, SURFACE_LABELS } from '../../services/labels.js'
+import { t } from '../../i18n/index.js'
 import { formatDistance } from '../../services/geo.js'
 import ClusterMarker from './ClusterMarker.vue'
 import { useTheme } from '../../composables/useTheme.js'
@@ -41,10 +42,10 @@ function buildIndex() {
 // revetement, la distance si on la connait, et le statut de verification.
 function markerLabel(court) {
   const parts = [court.name]
-  if (court.condition) parts.push(CONDITION_LABELS[court.condition]?.label)
-  if (court.surface) parts.push(SURFACE_LABELS[court.surface]?.label)
-  if (court.distance) parts.push('à ' + formatDistance(court.distance))
-  if (court.status === 'draft') parts.push('à vérifier')
+  if (court.condition) parts.push(t(CONDITION_LABELS[court.condition]?.key))
+  if (court.surface) parts.push(t(SURFACE_LABELS[court.surface]?.key))
+  if (court.distance) parts.push(formatDistance(court.distance))
+  if (court.status === 'draft') parts.push(t('legend.draftStatus'))
   return parts.filter(Boolean).join(', ')
 }
 
@@ -81,7 +82,7 @@ function syncMarkers() {
       render(h(ClusterMarker, { count }), el)
       el.setAttribute('role', 'button')
       el.setAttribute('tabindex', '0')
-      label = count + ' terrains regroupés, ouvrir'
+      label = t('legend.cluster')
       el.setAttribute('aria-label', label)
       const expand = (event) => {
         event.stopPropagation()

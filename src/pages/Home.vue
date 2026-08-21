@@ -15,6 +15,7 @@ import Icon from '../components/ui/Icon.vue'
 import NearbyStrip from '../components/court/NearbyStrip.vue'
 import MapLegend from '../components/map/MapLegend.vue'
 import { formatDistance } from '../services/geo.js'
+import { t } from '../i18n/index.js'
 
 const router = useRouter()
 const courtsStore = useCourtsStore()
@@ -34,9 +35,9 @@ const locating = ref(null)
 const selectedCourt = computed(() => courtsStore.selected)
 
 const LOCATING_MESSAGES = {
-  searching: 'Recherche de ta position…',
-  denied: 'Position refusée — autorise la géolocalisation dans ton navigateur.',
-  unsupported: 'Ton navigateur ne gère pas la géolocalisation.',
+  searching: 'map.locating',
+  denied: 'map.locationDenied',
+  unsupported: 'map.locationUnsupported',
 }
 
 function onLocating({ status, position }) {
@@ -119,11 +120,11 @@ async function runSearch() {
       lat: parseFloat(r.lat),
     }))
     if (searchResults.value.length === 0 && courtResults.value.length === 0) {
-      searchError.value = 'Rien trouvé, ni terrain ni lieu.'
+      searchError.value = t('map.nothingFound')
     }
   } catch {
     searchResults.value = []
-    if (courtResults.value.length === 0) searchError.value = 'Recherche indisponible.'
+    if (courtResults.value.length === 0) searchError.value = t('map.searchUnavailable')
   } finally {
     searching.value = false
   }
@@ -175,9 +176,9 @@ onBeforeUnmount(() => {
 })
 
 const FILTER_GROUPS = [
-  { field: 'surface', label: 'Surface', options: SURFACE_LABELS },
-  { field: 'condition', label: 'État', options: CONDITION_LABELS },
-  { field: 'traffic', label: 'Fréquentation', options: TRAFFIC_LABELS },
+  { field: 'surface', labelKey: 'form.surface', options: SURFACE_LABELS },
+  { field: 'condition', labelKey: 'form.condition', options: CONDITION_LABELS },
+  { field: 'traffic', labelKey: 'form.traffic', options: TRAFFIC_LABELS },
 ]
 
 function clearFilters() {
@@ -199,12 +200,12 @@ function toggleFilter(field, key) {
         <div class="mb-3 flex items-start justify-between gap-2">
           <div>
             <h1 class="font-display text-3xl leading-none tracking-wide text-accent-text">FreeCourt</h1>
-            <p class="text-xs text-txt-soft">Les terrains de basket du monde entier</p>
+            <p class="text-xs text-txt-soft">{{ t('app.tagline') }}</p>
           </div>
           <button
             class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-card text-lg hover:bg-edge"
-            title="Profil"
-            aria-label="Profil"
+            :title="t('nav.profile')"
+            :aria-label="t('nav.profile')"
             @click="router.push('/profile')"
           >
             <Icon name="user" :size="20" />
@@ -216,7 +217,7 @@ function toggleFilter(field, key) {
           <input
             v-model="searchQuery"
             type="search"
-            placeholder="Ville, quartier, adresse…"
+            :placeholder="t('map.searchPlaceholder')"
             class="min-w-0 flex-1 rounded-xl border border-edge bg-card px-3 py-2 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
           />
           <button class="grid place-items-center rounded-xl bg-accent px-3 text-sm font-bold text-on-accent" :disabled="searching">
@@ -225,7 +226,7 @@ function toggleFilter(field, key) {
           </button>
         </form>
         <div v-if="courtResults.length" class="mt-2 space-y-1">
-          <p class="px-1 text-[11px] font-bold uppercase tracking-wide text-txt-soft">Terrains</p>
+          <p class="px-1 text-[11px] font-bold uppercase tracking-wide text-txt-soft">{{ t('map.groupCourts') }}</p>
           <button
             v-for="court in courtResults"
             :key="court.id"
@@ -237,7 +238,7 @@ function toggleFilter(field, key) {
           </button>
         </div>
         <div v-if="searchResults.length" class="mt-2 space-y-1">
-          <p class="px-1 text-[11px] font-bold uppercase tracking-wide text-txt-soft">Lieux</p>
+          <p class="px-1 text-[11px] font-bold uppercase tracking-wide text-txt-soft">{{ t('map.groupPlaces') }}</p>
           <button
             v-for="place in searchResults"
             :key="place.label"
@@ -251,17 +252,17 @@ function toggleFilter(field, key) {
 
       <div v-if="selectedCourt" class="p-4">
         <button class="-mx-2 mb-2 inline-flex min-h-11 items-center px-2 text-xs font-semibold text-txt-soft hover:text-txt" @click="courtsStore.select(null)">
-          ← Retour à la liste
+          {{ t('nav.backToList') }}
         </button>
         <CourtCard :court="selectedCourt" @open="openDetail(selectedCourt.id)" />
       </div>
 
       <div v-else class="flex-1 p-2">
-        <p v-if="courtsStore.loading" class="p-4 text-sm text-txt-soft">Chargement…</p>
+        <p v-if="courtsStore.loading" class="p-4 text-sm text-txt-soft">{{ t('map.loading') }}</p>
         <p v-else-if="courtsStore.error" class="p-4 text-sm text-bad-soft">{{ courtsStore.error }}</p>
         <div v-else-if="courtsStore.filtered.length === 0" class="flex flex-col items-center gap-3 p-8 text-center">
           <Mascot mood="sad" :size="72" />
-          <p class="text-sm text-txt-soft">Aucun terrain ici. Ajoute le premier !</p>
+          <p class="text-sm text-txt-soft">{{ t('map.noneHere') }}</p>
         </div>
         <button
           v-for="court in courtsStore.filtered"
@@ -284,14 +285,14 @@ function toggleFilter(field, key) {
           @click="findNearMe"
         >
           <Icon name="pin" :size="18" />
-          Un terrain près de moi
+          {{ t('map.nearMe') }}
         </button>
         <button
           class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent-text hover:bg-accent/10"
           @click="startAdd"
         >
           <Icon name="ball" :size="18" />
-          Ajouter un terrain
+          {{ t('map.addCourt') }}
         </button>
       </div>
     </aside>
@@ -321,7 +322,7 @@ function toggleFilter(field, key) {
       >
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-lg"
-          aria-label="Chercher un terrain ou un lieu"
+          :aria-label="t('map.search')"
           :aria-expanded="searchOpen"
           @click="searchOpen ? closeSearch() : mapStore.toggleSearch()"
         >
@@ -337,14 +338,14 @@ function toggleFilter(field, key) {
               v-model="searchQuery"
               type="search"
               autofocus
-              placeholder="Terrain, ville, quartier…"
+              :placeholder="t('map.searchPlaceholder')"
               class="min-w-0 flex-1 rounded-full border border-edge bg-card px-4 py-2.5 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
             />
             <button
               type="submit"
               :disabled="searching"
               class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-accent text-on-accent disabled:opacity-50"
-              aria-label="Lancer la recherche"
+              :aria-label="t('map.searchRun')"
             >
               <span v-if="searching" class="text-sm font-bold">…</span>
               <Icon v-else name="search" :size="18" />
@@ -394,8 +395,8 @@ function toggleFilter(field, key) {
       <button
         v-if="mapStore.mode === 'browse'"
         class="absolute left-4 top-[4.75rem] z-10 grid h-12 w-12 place-items-center rounded-full border-2 border-edge bg-surface text-txt-soft shadow-lg"
-        aria-label="Comment lire la carte"
-        title="Comment lire la carte"
+        :aria-label="t('map.legend')"
+        :title="t('map.legend')"
         @click="legendOpen = true"
       >
         <span class="font-display text-xl leading-none">?</span>
@@ -408,14 +409,14 @@ function toggleFilter(field, key) {
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent text-lg shadow-lg"
           :class="courtsStore.hasActiveFilters ? 'bg-accent text-on-accent' : 'bg-surface text-txt'"
-          aria-label="Filtres"
+          :aria-label="t('map.filters')"
           @click="filtersOpen = !filtersOpen"
         >
           <Icon name="filters" :size="20" />
         </button>
         <div v-if="filtersOpen" class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-2xl">
           <div v-for="group in FILTER_GROUPS" :key="group.field" class="mb-3 last:mb-0">
-            <p class="mb-1.5 text-xs font-bold uppercase tracking-wide text-txt-soft">{{ group.label }}</p>
+            <p class="mb-1.5 text-xs font-bold uppercase tracking-wide text-txt-soft">{{ t(group.labelKey) }}</p>
             <div class="flex flex-wrap gap-1.5">
               <button
                 v-for="(cfg, key) in group.options"
@@ -424,7 +425,7 @@ function toggleFilter(field, key) {
                 :class="courtsStore.filters[group.field] === key ? 'border-accent bg-accent/20' : 'border-edge bg-card'"
                 @click="toggleFilter(group.field, key)"
               >
-                <Icon :name="cfg.icon" :size="13" />{{ cfg.label }}
+                <Icon :name="cfg.icon" :size="13" />{{ t(cfg.key) }}
               </button>
             </div>
           </div>
@@ -444,13 +445,13 @@ function toggleFilter(field, key) {
         v-if="mapStore.mode === 'browse' && courtsStore.filtered.length === 0 && !courtsStore.loading"
         class="absolute inset-x-3 bottom-24 z-10 rounded-2xl border border-edge bg-surface/95 p-4 text-center shadow-xl backdrop-blur lg:hidden"
       >
-        <p class="text-sm font-semibold">Aucun terrain ne correspond à tes filtres.</p>
+        <p class="text-sm font-semibold">{{ t('map.noMatch') }}</p>
         <button
           v-if="courtsStore.hasActiveFilters"
           class="mt-3 min-h-11 rounded-full bg-accent px-5 text-sm font-bold uppercase tracking-wide text-on-accent"
           @click="clearFilters"
         >
-          Effacer les filtres
+          {{ t('map.clearFilters') }}
         </button>
       </div>
 
@@ -464,16 +465,16 @@ function toggleFilter(field, key) {
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-lg"
           :class="{ 'animate-pulse': locating === 'searching' }"
-          aria-label="Voir les terrains près de moi"
-          title="Voir les terrains près de moi"
+          :aria-label="t('map.nearMe')"
+          :title="t('map.nearMe')"
           @click="findNearMe"
         >
           <Icon name="pin" :size="20" />
         </button>
         <button
           class="grid h-12 w-12 place-items-center rounded-full bg-accent text-on-accent shadow-lg shadow-accent/30"
-          aria-label="Ajouter un terrain"
-          title="Ajouter un terrain"
+          :aria-label="t('map.addCourt')"
+          :title="t('map.addCourt')"
           @click="startAdd"
         >
           <Icon name="ball" :size="22" />
@@ -494,13 +495,13 @@ function toggleFilter(field, key) {
         class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-txt/85 px-4 py-2 text-center text-xs shadow-lg"
         :class="{ 'bg-bad-soft text-on-accent': locating === 'denied' || locating === 'unsupported' }"
       >
-        {{ LOCATING_MESSAGES[locating] }}
+        {{ t(LOCATING_MESSAGES[locating]) }}
       </p>
       <p
         v-else-if="courtsStore.loading"
         class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-txt/85 px-4 py-2 text-xs lg:hidden"
       >
-        Chargement des terrains…
+        {{ t('map.loading') }}
       </p>
       <p
         v-else-if="courtsStore.error"

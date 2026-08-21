@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import Icon from './Icon.vue'
+import { t } from '../../i18n/index.js'
 
 // Tab bar mobile : carte / profil. La recherche a quitté la tab bar pour la
 // loupe posée sur la carte, en face des filtres — deux accès au même écran
@@ -9,8 +10,8 @@ const route = useRoute()
 const router = useRouter()
 
 const tabs = [
-  { key: 'home', icon: 'ball', label: 'Carte', action: () => router.push('/') },
-  { key: 'profile', icon: 'user', label: 'Profil', action: () => router.push('/profile') },
+  { key: 'home', icon: 'ball', labelKey: 'nav.map', action: () => router.push('/') },
+  { key: 'profile', icon: 'user', labelKey: 'nav.profile', action: () => router.push('/profile') },
 ]
 </script>
 
@@ -22,7 +23,7 @@ const tabs = [
       v-for="tab in tabs"
       :key="tab.key"
       class="flex min-h-11 flex-1 flex-col items-center gap-0.5 py-2"
-      :aria-label="tab.label"
+      :aria-label="t(tab.labelKey)"
       :aria-current="route.name === tab.key ? 'page' : undefined"
       @click="tab.action()"
     >
@@ -33,7 +34,7 @@ const tabs = [
         <Icon :name="tab.icon" :size="20" />
       </span>
       <span class="text-[11px] font-semibold uppercase tracking-wide text-txt-soft">
-        {{ tab.label }}
+        {{ t(tab.labelKey) }}
       </span>
     </button>
   </nav>

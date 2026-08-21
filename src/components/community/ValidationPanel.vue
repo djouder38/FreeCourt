@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
 import FlagIssue from './FlagIssue.vue'
 import Icon from '../ui/Icon.vue'
+import { t } from '../../i18n/index.js'
 import { useToast } from '../../composables/useToast.js'
 
 // Validation communautaire : "le terrain existe", "les infos sont bonnes",
@@ -23,41 +24,41 @@ async function validate(type) {
   try {
     await courtsStore.validate(props.court.id, type)
     done.value = type
-    toast.show('Merci, ta validation compte.')
+    toast.show(t('toast.validated'))
     emit('validated')
   } catch (err) {
     console.error(err)
-    error.value = 'La validation a échoué, réessaie.'
+    error.value = t('validation.failed')
   }
 }
 </script>
 
 <template>
   <section class="rounded-2xl border border-edge bg-card p-4">
-    <h3 class="mb-1 font-display text-xl tracking-wide">Valide ce terrain</h3>
+    <h3 class="mb-1 font-display text-xl tracking-wide">{{ t('validation.title') }}</h3>
     <p class="mb-3 text-xs text-txt-soft">
-      {{ court.validation_count }}/5 validations — à 5, le terrain passe en « validé ».
+      {{ t('validation.counter', { count: court.validation_count }) }}
     </p>
 
-    <p v-if="done" class="text-sm font-semibold text-ok">Merci pour le coup de main !</p>
+    <p v-if="done" class="text-sm font-semibold text-ok">{{ t('validation.thanks') }}</p>
     <div v-else class="flex flex-wrap gap-2">
       <button
         class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-ok/50 bg-ok/10 px-4 py-2.5 text-sm font-semibold text-ok"
         @click="validate('existence')"
       >
-        <Icon name="check" :size="16" /> Il existe
+        <Icon name="check" :size="16" /> {{ t('validation.exists') }}
       </button>
       <button
         class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm font-semibold"
         @click="validate('info_correct')"
       >
-        <Icon name="checkCircle" :size="16" /> Infos correctes
+        <Icon name="checkCircle" :size="16" /> {{ t('validation.infoCorrect') }}
       </button>
       <button
         class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-bad-soft/50 bg-bad/10 px-4 py-2.5 text-sm font-semibold text-bad-soft"
         @click="flagOpen = true"
       >
-        <Icon name="flag" :size="16" /> Un problème
+        <Icon name="flag" :size="16" /> {{ t('validation.problem') }}
       </button>
     </div>
     <p v-if="error" class="mt-2 text-xs text-bad-soft">{{ error }}</p>
