@@ -1,24 +1,21 @@
 # Contexte actif — FreeCourt
 
-## Où on en est (fin de session 2026-08-20)
-La spec `freecourt-claude-code-prompt.md` est **entièrement implémentée**,
-testée en navigateur (mobile 375px + desktop 1280px) et poussée sur
-`github.com/djouder38/FreeCourt`. Vercel déploie automatiquement à chaque
-push : dernier build **READY**.
+## Où on en est (2026-08-21)
+La spec `freecourt-claude-code-prompt.md` est **entièrement implémentée** et
+**LA PROD EST EN LIGNE ET VÉRIFIÉE** : https://free-court-ebon.vercel.app
+(mobile 375px : carte + 15 markers + bottom sheet + fiche détail + deep link
+direct OK). Repo `github.com/djouder38/FreeCourt`, deploy auto au push.
 
-⛔ **La prod est en page blanche tant que les env vars ne sont pas posées.**
-C'est le seul point bloquant, et Théo s'en occupe demain (20/08 au soir).
+Épisode env vars (résolu le 21/08) : Théo avait collé l'URL de l'endpoint
+REST (…/rest/v1) au lieu de l'URL de base → chemin doublé, PGRST125.
+Corrigé en normalisant l'URL dans `src/services/supabase.js` (le code
+tolère /rest/v1 et les slashs finaux). Un redeploy a aussi été nécessaire
+après la pose des vars (Vite inline au build).
 
-## ⏭️ À REPRENDRE ICI (première chose à faire à la prochaine session)
-1. Théo pose sur Vercel (projet `free-court` → Settings → Environment
-   Variables, pour Production + Preview) :
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-   → **valeurs à copier depuis le `.env` local du projet** (jamais en clair
-   dans les fichiers de pilotage).
-2. Redeploy Vercel.
-3. Moi : re-vérifier https://free-court-ebon.vercel.app en mobile ET en
-   desktop (markers, ajout terrain, avis, photo) et confirmer à Théo.
+## ⏭️ Prochaine étape naturelle
+- v1 auth + statuts contributeurs (feu vert Théo attendu) — voir ROADMAP.md.
+- Optionnel : Théo peut nettoyer VITE_SUPABASE_URL sur Vercel (retirer
+  /rest/v1) mais ce n'est plus nécessaire, le code normalise.
 
 ## Livré et vérifié en préview réelle
 - Carte dark (MapLibre + OpenFreeMap), 15 terrains seed, markers SVG
@@ -47,6 +44,10 @@ C'est le seul point bloquant, et Théo s'en occupe demain (20/08 au soir).
   minuscules redirige).
 
 ## Bugs trouvés et corrigés pendant la vérif
+- **PGRST125 en prod** : `VITE_SUPABASE_URL` posée avec `/rest/v1` (URL de
+  l'endpoint REST du dashboard) → supabase-js rajoute `/rest/v1` de son
+  côté, chemin doublé. `src/services/supabase.js` normalise maintenant
+  l'URL au lieu d'exiger une variable parfaite.
 - Markers absents au remount SPA → `renderMarkers()` direct au mount, sans
   dépendre de l'event `load` de MapLibre (il ne se rejoue pas).
 - Message de validation invisible → `CourtDetail` ne remet `loading=true`
