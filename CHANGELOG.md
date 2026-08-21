@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.5.0] — 2026-08-21 (soir)
+Identité visuelle : sortie du Tailwind par défaut.
+
+- Monde « béton et marquage au sol ». Trois règles : le béton est gris et
+  jamais crème ; la couleur est de la peinture et couvre (44 aplats
+  translucides supprimés) ; l'interface est le terrain (bleu de peinture)
+  et les terrains sont le ballon (orange).
+- Grain SVG sur toutes les surfaces : plus aucun aplat numérique parfait.
+- Typographie : Archivo + Big Shoulders Display, en remplacement d'Inter et
+  Bebas Neue — les deux polices que le garde-fou d'Impeccable cite comme à
+  éviter.
+- Ombres dessinées (`--shadow-slab`, `--shadow-raised`) à la place des 24
+  `shadow-lg/xl/2xl` de Tailwind.
+- La pastille de regroupement perd son dégradé radial (faux volume).
+- Zéro échec de contraste en jour comme en nuit.
+
+## [0.4.0] — 2026-08-21 (après-midi)
+Bilingue, accessibilité et confort.
+
+- i18n FR/EN complet, bascule instantanée, système maison de 60 lignes
+  (plutôt que ~40 Ko de vue-i18n). Détection de la langue du navigateur,
+  choix persisté, `<html lang>` synchronisé. Les formats suivent :
+  « 2,9 km » / « 2.9 km ».
+- Feedback unifié : la mascotte pour toutes les réussites, au lieu de cinq
+  mécanismes différents.
+- Le toast est annoncé aux lecteurs d'écran (région live permanente) —
+  correction d'une régression causée par l'unification elle-même.
+- `prefers-reduced-motion` respecté, y compris sur les vols de caméra.
+- Marqueurs accessibles au clavier, avec intitulés parlants.
+- Légende de carte expliquant l'encodage des marqueurs, avec de vrais
+  marqueurs rendus par le composant.
+- Recherche : interroge les terrains de l'app, pas seulement les lieux.
+- Favicon, icônes d'écran d'accueil et manifeste PWA (Bally).
+- Accès de développement local (non sécurisé et documenté comme tel).
+- Vocabulaire des états ramené à deux mots : « À vérifier » et « Validé ».
+
+## [0.3.1] — 2026-08-21 (matin)
+Passe design guidée par Impeccable.
+
+- P0 corrigé : le bouton d'ajout tombait sous la tab bar, ce qui perdait le
+  formulaire sans avertissement.
+- Contrastes mesurés et corrigés : le blanc sur l'orange plafonnait à
+  2.84:1 alors que le CTA principal en dépendait.
+- Emoji entièrement remplacés par un jeu de 26 icônes dessinées.
+- Cibles tactiles à 44px, zone de contact vérifiée au pointeur.
+- Double thème jour/nuit, jour par défaut.
+- Premier écran refondu : les terrains proches triés par distance
+  remplacent les deux CTA.
+- Carte abstraite : 12 couches masquées, détourage des routes corrigé.
+- Distance à vol d'oiseau et fraîcheur de l'information.
+- Clustering, recherche compacte, filtres et légende.
+
 ## [0.3.0] — 2026-08-21
 Passe lisibilité / navigation, sur retours de Théo.
 

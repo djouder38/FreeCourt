@@ -1,88 +1,112 @@
 # Contexte actif — FreeCourt
 
-## Où on en est (2026-08-21)
-Prod en ligne et vérifiée : **https://free-court-ebon.vercel.app**
-Repo `github.com/djouder38/FreeCourt`, deploy auto au push.
-Dernière livraison : passe lisibilité / navigation (v0.3.0) sur retours
-de Théo — carte recontrastée, clustering, recherche compacte, CTA géoloc.
+## Où on en est (fin de session 2026-08-21)
 
-## Livré dans la passe 0.3.0 (vérifié en 375px et 1280px)
-- **Carte** : palette "béton nocturne" appliquée strate par strate
-  (`applyPalette()` dans `services/mapbox.js`). Fond #1a1d23 au lieu de
-  noir pur, eau #15323f, bâtiments #262a32, rues #3c424e, autoroutes
-  #646b7a, labels #eceae7 + halo. Vérifié couche par couche.
-- **Clustering** : supercluster, radius 60. Testé : NY zoom 6 = 1 pastille
-  « 2 » → zoom 10 = 2 pins ; Paris zoom 9 = pastille « 3 ». Clic sur une
-  pastille → easeTo au zoom de séparation (9.2 pour NY, vérifié).
-- **Recherche** : barre compacte 42px en haut de carte (avant : bottom
-  sheet de ~325px). Testée avec « Berlin » → 2 résultats → recentrage.
-- **CTA géoloc** : « 📍 Trouver un terrain près de moi » en CTA principal,
-  « 🏀 Ajouter un terrain » juste dessous, les deux à parité. Idem dans la
-  sidebar desktop. Retour d'état si la position est refusée.
+Prod en ligne : **https://free-court-ebon.vercel.app**
+Repo `github.com/djouder38/FreeCourt`, déploiement auto au push.
+24 commits dans la journée. Version 0.5.0.
 
-## Décisions / écarts à valider par Théo
-1. **MapLibre + OpenFreeMap plutôt que Mapbox** (toujours en attente de
-   son OK). Mapbox = 50k chargements/mois gratuits puis ~5 $/1000, et il
-   faut un token ; MapLibre+OpenFreeMap = 0 €, sans clé ni quota, mais
-   sans SLA (projet communautaire) et données un peu moins riches.
-   Le swap est documenté dans `services/mapbox.js`.
-2. RLS permissive tant que l'auth n'est pas branchée (policies commentées
-   dans `002_rules_and_rls.sql`).
+La journée a été une passe design complète, menée avec le skill **Impeccable**
+installé en début de session. L'app est passée d'un score de critique de
+**17/40 à 30/40**, puis a reçu une refonte d'identité visuelle en fin de
+journée.
 
-## Pièges connus (à ne pas rediagnostiquer)
+## ⏭️ À REPRENDRE ICI
+
+**1. Théo doit juger le nouveau monde visuel sur son téléphone.** C'est un
+changement d'identité, pas une retouche — son œil tranche, pas mes mesures.
+Ce qui a changé : béton gris à la place du blanc cassé, accent bleu de
+peinture à la place de l'orange, orange réservé aux marqueurs et à la
+mascotte, grain sur toutes les surfaces, typo Archivo + Big Shoulders.
+
+**2. Deux chantiers du monde visuel restent ouverts**, volontairement :
+- **Les formes** : tout est encore arrondi (46 `rounded-full` à l'origine).
+  La tension prévue entre dalle carrée (surfaces) et marquage arrondi
+  (actions) n'est pas appliquée.
+- **La hiérarchie typographique** : tout vit entre 11 et 16px. Big Shoulders
+  Display demande à respirer en grand, sinon la typo ne sert à rien.
+
+## Livré aujourd'hui
+
+**Outillage** — Impeccable installé en scope projet, hooks actifs
+(`.claude/skills/`, gitignoré). Deux critiques archivées dans
+`.impeccable/critique/`.
+
+**Produit** — `PRODUCT.md` écrit avec Théo. Positionnement clé qu'il a
+ajouté : « une carte qui ne montre que les terrains et rien d'autre ».
+
+**Corrections structurelles**
+- P0 : le bouton d'ajout tombait sous la tab bar, tap = formulaire perdu.
+  La tab bar disparaît des écrans de tâche (`/add`, `/court/:id`).
+- Contrastes : le blanc sur l'orange plafonnait à 2.84:1. Zéro échec
+  aujourd'hui, en jour comme en nuit.
+- Cibles tactiles : plus rien sous 44px, vérifié au pointeur (le marqueur
+  garde 38px de dessin, sa zone de contact fait 44).
+- Accessibilité : marqueurs focusables au clavier avec intitulés parlants ;
+  toast annoncé aux lecteurs d'écran (région live permanente).
+- `prefers-reduced-motion` respecté, y compris sur les vols de caméra.
+
+**Fonctionnel**
+- Double thème jour/nuit, jour par défaut (l'app s'utilise dehors).
+- Premier écran refondu : les 2 CTA sont remplacés par la bande des terrains
+  proches, triés par distance. Géoloc silencieuse si déjà autorisée.
+- Carte abstraite : 12 couches masquées sur 47 (bâti, POI, noms de rue,
+  frontières). Détourage des routes corrigé (les casings prenaient la
+  couleur du remplissage).
+- Recherche : interroge enfin les terrains de l'app, pas seulement les lieux.
+  Panneau en haut à droite, en miroir des filtres.
+- Fraîcheur de l'information : « Décrit hier · confirmé par 6 joueurs »,
+  passage en avertissement au-delà de 6 mois.
+- Légende de carte (`MapLegend.vue`) qui rend de vrais marqueurs.
+- Feedback unifié : la mascotte pour toutes les réussites.
+- i18n FR/EN complet avec bascule instantanée, système maison (60 lignes).
+- Favicon + icônes d'écran d'accueil (Bally) + manifeste PWA.
+- Accès de développement (bouton en haut à droite du profil).
+
+## Décisions actées
+
+- **Impeccable fait autorité sur le design**, pas la spec d'origine
+  (`freecourt-claude-code-prompt.md`), qui reste la référence produit.
+- **Jamais d'emoji** : tout passe par `components/ui/Icon.vue`.
+- **Jamais d'aplat translucide** pour fabriquer un état : la couleur couvre.
+- **L'interface est le terrain (bleu), les terrains sont le ballon (orange).**
+- Vocabulaire des états : deux mots, « À vérifier » et « Validé ».
+- Statuts contributeurs (Rookie → Legend) non traduits : vocabulaire basket.
+
+## Reste ouvert (par ordre d'impact)
+
+1. Les deux chantiers du monde visuel ci-dessus.
+2. **Bottom sheet sans sortie explicite** : ni bouton, ni Échap, seulement
+   un glissement que rien n'annonce. Inatteignable au clavier.
+3. **Actions irréversibles** : validations, avis et votes n'ont ni
+   confirmation ni retour arrière. Dépend de l'auth — c'est le vrai
+   argument pour la brancher.
+4. **Aucun onboarding** au premier lancement.
+5. **Chunk Home à 829 Ko** (maplibre-gl non code-splitté), sur une app
+   qu'on ouvre dehors en 4G.
+6. **Pluriels anglais figés** (« 1 reviews ») : ~30 lignes.
+7. v1 auth + statuts contributeurs réels (structure prête dans
+   `stores/user.js`).
+
+## Pièges connus (ne pas rediagnostiquer)
+
 - Quand le panneau navigateur n'est pas affiché, **rien n'est composité** :
-  les transitions CSS, `easeTo`/`flyTo` et l'event `load` de MapLibre ne
-  se déclenchent pas. Ce n'est pas un bug de l'app — neutraliser la
-  transition ou espionner l'appel pour vérifier.
-- `VITE_SUPABASE_URL` sur Vercel contient `/rest/v1` : le code le tolère
-  désormais (normalisation dans `services/supabase.js`).
+  transitions CSS, `easeTo`/`flyTo` et l'event `load` de MapLibre ne se
+  déclenchent pas, et les captures d'écran échouent. Neutraliser la
+  transition ou espionner l'appel plutôt que conclure à un bug.
+- Après beaucoup d'éditions, le serveur de dev peut servir un module périmé
+  (« does not provide an export named … ») : vider `node_modules/.vite` et
+  redémarrer. Le build de prod n'est pas affecté.
+- MapLibre écrase l'`aria-label` des marqueurs : le reposer APRÈS `addTo`.
+- `VITE_SUPABASE_URL` contient `/rest/v1` côté Vercel ; le code le tolère.
+- Ne jamais lancer de regex globale sur les espaces dans un `.vue` : ça
+  aplatit l'indentation de tout le fichier (appris à mes dépens aujourd'hui).
 
-## Dette connue (non bloquant)
-- Chunk `Home` à 835 KB (maplibre-gl non code-splitté).
-- Un PNG de test orphelin dans le bucket `court-photos`.
-- Ciutadella Court à 3/5 validations (2 du seed + 1 test).
-- `~/.claude/lessons-learned.md` a un souci d'encodage (accents cassés).
-  Pas touché — Théo doit dire s'il veut que je le réécrive.
+## En attente de Théo
 
-## Outillage design : Impeccable (installe le 2026-08-21)
-Skill tiers (github.com/pbakaus/impeccable, Apache 2.0, 61k stars) installe
-en **scope projet** avec les **hooks actifs** (choix de Theo).
-- Emplacement : `.claude/skills/impeccable/` (148 fichiers) + hooks dans
-  `.claude/settings.local.json`. Les deux sont **gitignores** : c'est un
-  outil reinstallable, pas une dependance du projet.
-- Reinstaller / mettre a jour :
-  `npx impeccable install --providers=claude --scope=project`
-- Scan manuel : `node .claude/skills/impeccable/scripts/detect.mjs src`
-- Ce que ca apporte : 23 commandes design (`/impeccable critique|audit|
-  polish|layout|colorize|bolder|quieter...`) + 59 regles deterministes
-  (sans LLM) qui detectent les tics visuels d'IA.
-- Premier passage sur FreeCourt : 1 finding reel (layout-transition sur
-  BottomSheet) corrige. Le scan de `src` est propre (exit 0).
-- Pas encore fait : `/impeccable init` (ecrit PRODUCT.md + DESIGN.md, le
-  brief design durable que toutes les commandes relisent). A proposer a
-  Theo -- c'est ce qui donnerait le plus de valeur aux commandes suivantes.
-
-## Passe design du 2026-08-21 (apres install Impeccable)
-
-**Regle actee par Theo : Impeccable fait autorite sur le design, la spec
-d'origine (freecourt-claude-code-prompt.md) est caduque sur ce plan.**
-Elle reste la reference produit et fonctionnelle.
-
-Livre et verifie :
-- `PRODUCT.md` ecrit via /impeccable init (interview de Theo). Positionnement
-  cle ajoute par lui : "une carte qui ne montre que les terrains et rien
-  d'autre", l'itineraire est delegue a Google Maps.
-- Contrastes mesures et corriges : blanc sur orange plafonnait a 2.84:1
-  (le CTA principal etait le texte le moins lisible de l'app) -> encre
-  #0f0f0f, 6.75:1. Pastilles cluster 3.66 -> 5.24-8.23. Token
-  --color-bad-soft pour le texte rouge (5.61:1).
-- Surfaces navigateur thematisees : ::selection, focus-visible, caret,
-  scrollbars.
-- Emoji entierement remplaces : 22 distincts / 41 occurrences -> nouveau
-  `src/components/ui/Icon.vue` (26 icones, grille 24x24, trait 2,
-  currentColor). Verifie : 59 icones a l'ecran, un seul trait, zero emoji.
-- BottomSheet : anime `transform` au lieu de `height` (trouve par le hook).
-
-## Prochaine etape
-- v1 auth + statuts contributeurs (structure prête dans `stores/user.js`) :
-  Supabase Auth, scoring, quotas, RLS resserrées. En attente du feu vert.
+- Son verdict sur le nouveau monde visuel (le point bloquant de demain).
+- Un terrain nommé « test » traîne en base, créé par lui pendant ses essais.
+  Je ne l'ai pas supprimé.
+- Sa limite de dépense mensuelle a sauté une fois aujourd'hui, ce qui a tué
+  un sous-agent en cours de critique. Les critiques suivantes tournent en
+  contexte unique (mode dégradé assumé et signalé).

@@ -1,10 +1,11 @@
 # 🏀 FreeCourt
 
 Web app communautaire pour localiser, ajouter et noter des terrains de basket
-à travers le monde. Mobile-first, ambiance street ball dark.
+à travers le monde. Mobile-first, ambiance street ball : béton, marquage au sol, jour et nuit.
 
 ## Stack
 - Vue 3 + Vite + Tailwind CSS 4 + Pinia + Vue Router
+- i18n maison (FR/EN) dans `src/i18n/`
 - Carte : MapLibre GL + tuiles vectorielles OpenFreeMap (style dark custom)
 - Backend : Supabase (PostgreSQL + RLS + Storage), projet `freecourt`
 - Déploiement : Vercel via GitHub (`djouder38/freecourt`)
@@ -20,6 +21,16 @@ Supabase (Settings → API), puis :
 
 ```bash
 npm run dev
+```
+
+## Design
+Le monde visuel est « beton et marquage au sol » : voir CLAUDE.md pour les
+trois regles qui gouvernent le CSS. Le skill Impeccable est installe en
+local (`.claude/skills/`, gitignore) et fait autorite sur le design.
+Relancer le detecteur :
+
+```bash
+node .claude/skills/impeccable/scripts/detect.mjs src
 ```
 
 ## Base de données

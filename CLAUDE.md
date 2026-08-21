@@ -34,6 +34,16 @@ l'avancement.
 - Design : Impeccable fait autorite, PAS la spec d origine
   (freecourt-claude-code-prompt.md est caduque cote design, decision Theo
   du 2026-08-21). Elle reste la reference produit/fonctionnel.
+- Monde visuel « beton et marquage » (2026-08-21). Trois regles qui
+  gouvernent tout le CSS : le beton est GRIS jamais creme ; la couleur est
+  de la PEINTURE et couvre (aucun aplat translucide pour fabriquer un
+  etat) ; l interface est le terrain (--color-accent, bleu) et les terrains
+  sont le ballon (--color-ball, orange, reserve aux marqueurs et a la
+  mascotte). Tokens dans src/style.css, ombres dessinees uniquement.
+- Polices : Archivo (corps) + Big Shoulders Display (display). Ni Inter ni
+  Bebas, cites par le craft-floor d Impeccable comme surexploitees.
+- i18n : toute chaine visible passe par src/i18n/. Les noms de statut
+  (Rookie, Baller, Legend) ne se traduisent pas.
 - Icones : jamais d emoji. Tout passe par components/ui/Icon.vue (grille
   24x24, trait 2, bouts arrondis, currentColor). Ajouter une icone = une
   entree dans le registre de ce fichier, pas un glyphe inline.

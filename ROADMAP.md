@@ -3,44 +3,63 @@
 ## Vision
 La référence communautaire des terrains de basket dans le monde : trouver un
 spot, l'ajouter, le noter, le faire vivre. Mobile-first, ambiance street ball.
-Spec de référence : `freecourt-claude-code-prompt.md`.
+Vérité produit : `PRODUCT.md`. Design : le skill Impeccable fait autorité
+(la spec d'origine `freecourt-claude-code-prompt.md` reste la référence
+fonctionnelle, mais est caduque sur le design).
 
-## Livré (v0.2 — 2026-08-20)
-- App Vue 3 + Vite + Tailwind 4 + Pinia + Router, structure spec.
-- Carte dark custom (MapLibre + OpenFreeMap), markers SVG dynamiques
-  (état/revêtement/fréquentation, draft semi-transparent).
-- Supabase : 5 tables + RLS + triggers (lock à 5 validations, 3 photos max)
-  + RPC vote_helpful + bucket court-photos + seed 15 terrains.
-- Flow ajout terrain complet (pin mode + recherche d'adresse + formulaire).
-- Fiche terrain : badges, photos (upload), avis 1-5 + vote utile,
-  validation communautaire, signalement.
-- Mobile : tab bar, bottom sheets 40/90%, bouton AJOUTER flottant.
-- Desktop : sidebar 320px liste/détail.
-- Mascotte Bally (toast, 404, profil vide, états vides).
-- Page profil placeholder + référentiel statuts Rookie → Legend.
+## En ligne
+https://free-court-ebon.vercel.app — déploiement auto au push sur `main`.
 
-## Prochaine étape (v0.3)
-- Déploiement production Vercel (push fait ; env vars à poser).
-- Retirer le suffixe "(test)" du process de QA, vérifier la prod mobile.
+## Livré (v0.5.0 — 2026-08-21)
+- Carte MapLibre abstraite : ne montre que ce qui aide à trouver un terrain.
+- Clustering, filtres, recherche (terrains + lieux), légende, géolocalisation.
+- Ajout de terrain, photos, avis, validation communautaire, signalement.
+- Distance à vol d'oiseau et fraîcheur de l'information.
+- Double thème jour/nuit, bilingue FR/EN.
+- Identité visuelle « béton et marquage au sol ».
+- Accessibilité : cibles 44px, clavier, lecteurs d'écran, reduced-motion.
+- PWA installable (icônes + manifeste).
 
-## v1 — Auth + contributeurs
-- Supabase Auth Google/email (structure prête dans stores/user.js).
-- Profils réels, scoring auto (+10 terrain validé, +2 validation, +5 avis,
-  +1 vote utile reçu), statuts + quotas de la spec.
-- Resserrer les RLS (created_by = auth.uid(), quotas d'ajout par statut).
-- Édition de terrain selon droits (Regular: les siens, Baller: tous
-  non-lockés, Legend: modération).
+## Prochaine étape — finir l'identité visuelle
+Deux chantiers ouverts par la refonte du 21/08, en attente du verdict de Théo
+sur le rendu :
+- **Les formes.** Tout est encore arrondi. La tension prévue entre dalle
+  carrée (surfaces) et marquage arrondi (actions) reste à appliquer.
+- **La hiérarchie typographique.** Tout vit entre 11 et 16px ; Big Shoulders
+  Display demande à respirer en grand pour servir à quelque chose.
+
+## Ensuite — solidité
+- Bottom sheet sans sortie explicite (ni bouton, ni Échap, ni clavier).
+- Onboarding au premier lancement : rien n'accueille un nouveau visiteur.
+- Chunk Home à 829 Ko (maplibre-gl non code-splitté), sur une app qu'on
+  ouvre dehors en 4G.
+- Pluriels anglais figés (« 1 reviews »).
+
+## v1 — Auth et contributeurs
+La structure est prête et dormante dans `stores/user.js`.
+- Supabase Auth (magic link ou OAuth) en remplacement de l'accès de
+  développement local, qui n'est pas une sécurité.
+- Profils réels, scoring automatique, statuts Rookie → Legend et quotas.
+- Resserrer les RLS : aujourd'hui permissives pour permettre l'anonymat.
+- **Actions réversibles** : validations, avis et votes sont aujourd'hui
+  définitifs et anonymes. C'est le vrai argument produit pour brancher
+  l'auth, pas seulement le confort d'avoir un compte.
+- Modération : un compte admin existe côté interface mais n'a aucun pouvoir
+  côté base.
 
 ## v2 — Idées (non engagé)
-- Favoris, recherche de terrains par nom.
+- Favoris, « j'y joue souvent ».
 - Photos : compression client, modération.
-- Code-split de maplibre-gl (chunk Home à 819 KB aujourd'hui).
-- PWA / offline.
+- Reversement des contributions vers OpenStreetMap.
+- Mode hors-ligne.
 
 ## Décisions actées
-- 2026-08-20 : pivot complet vers la spec FreeCourt de Théo (l'ancienne v1
-  OSM/Overpass est archivée dans archive/v1-osm-leaflet/).
-- 2026-08-20 : MapLibre + OpenFreeMap au lieu de Mapbox GL (token payant
-  requis sinon) — même rendu dark, swap documenté, à revalider par Théo.
-- 2026-08-20 : PicsIbou mis en pause sur Supabase (choix Théo) pour libérer
-  le slot free tier du projet freecourt.
+- 2026-08-20 : pivot vers la spec FreeCourt (v1 OSM/Overpass archivée dans
+  `archive/v1-osm-leaflet/`).
+- 2026-08-20 : MapLibre + OpenFreeMap plutôt que Mapbox (token payant).
+  Swap documenté dans `services/mapbox.js`.
+- 2026-08-21 : Impeccable fait autorité sur le design.
+- 2026-08-21 : bilingue FR/EN dès maintenant ; les statuts contributeurs
+  ne se traduisent pas (vocabulaire basket).
+- 2026-08-21 : monde visuel « béton et marquage ». L'interface est le
+  terrain (bleu de peinture), les terrains sont le ballon (orange).
