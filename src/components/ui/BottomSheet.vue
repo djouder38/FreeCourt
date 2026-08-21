@@ -9,11 +9,20 @@ const expanded = ref(false)
 const dragOffset = ref(0)
 let dragStartY = null
 
-const heightStyle = computed(() => ({
-  height: expanded.value ? '90dvh' : '40dvh',
-  transform: `translateY(${Math.max(dragOffset.value, 0)}px)`,
-  transition: dragStartY === null ? 'height 0.25s ease, transform 0.2s ease' : 'none',
-}))
+// Hauteur fixe + translation : animer `height` force un recalcul de layout
+// a chaque frame, la ou `transform` reste sur le compositeur.
+// Replie = 90dvh translates de 50dvh vers le bas, soit 40dvh visibles.
+const COLLAPSED_OFFSET_DVH = 50
+
+const heightStyle = computed(() => {
+  const base = expanded.value ? 0 : COLLAPSED_OFFSET_DVH
+  const drag = Math.max(dragOffset.value, 0)
+  return {
+    height: '90dvh',
+    transform: `translateY(calc(${base}dvh + ${drag}px))`,
+    transition: dragStartY === null ? 'transform 0.25s ease' : 'none',
+  }
+})
 
 function onTouchStart(e) {
   dragStartY = e.touches ? e.touches[0].clientY : e.clientY

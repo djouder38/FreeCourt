@@ -31,6 +31,11 @@ l'avancement.
   n'est composité — les transitions CSS, les animations `easeTo/flyTo` et
   l'event `load` de MapLibre ne se déclenchent pas. Neutraliser la
   transition ou espionner l'appel plutôt que conclure à un bug.
+- Skill Impeccable installe en local (.claude/skills/, gitignore) :
+  detecteur d anti-patterns design + 23 commandes /impeccable. Hooks actifs
+  (PostToolUse + Stop) via .claude/settings.local.json. Relancer le scan a
+  la main : node .claude/skills/impeccable/scripts/detect.mjs src
+  Reinstaller : npx impeccable install --providers=claude --scope=project
 - GitHub : djouder38/freecourt · Vercel : projet `free-court`.
 - archive/v1-osm-leaflet/ = première version (Leaflet + Overpass), gardée
   pour référence.
