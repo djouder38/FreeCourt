@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY,
-)
+// Tolère une URL copiée depuis le dashboard avec /rest/v1 ou un slash final :
+// le client ajoute lui-même /rest/v1, sinon le chemin est doublé (PGRST125).
+const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL ?? '')
+  .replace(/\/rest\/v1\/?$/, '')
+  .replace(/\/+$/, '')
+
+export const supabase = createClient(SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY)
 
 // Terrains avec leurs photos et la moyenne des avis, en une requête.
 export async function fetchCourtsWithRelations() {
