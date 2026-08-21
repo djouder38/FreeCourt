@@ -156,7 +156,7 @@ function showPin(lngLat) {
     const el = document.createElement('div')
     el.className = 'text-surface'
     el.innerHTML =
-      '<svg width="34" height="46" viewBox="0 0 34 46"><path d="M17 45C17 45 32 26 32 16a15 15 0 1 0-30 0c0 10 15 29 15 29Z" fill="#FF6B2B" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="16" r="6" fill="currentColor"/></svg>'
+      '<svg width="34" height="46" viewBox="0 0 34 46"><path d="M17 45C17 45 32 26 32 16a15 15 0 1 0-30 0c0 10 15 29 15 29Z" fill="var(--color-accent)" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="16" r="6" fill="currentColor"/></svg>'
     pinMarker = new maplibregl.Marker({ element: el, draggable: true, anchor: 'bottom' })
     pinMarker.on('dragend', () => {
       const p = pinMarker.getLngLat()

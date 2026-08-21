@@ -24,7 +24,7 @@ const visible = computed(() => props.courts.slice(0, 10))
       <button
         v-for="court in visible"
         :key="court.id"
-        class="w-60 shrink-0 snap-start rounded-2xl border border-edge bg-surface/95 p-3 text-left shadow-xl backdrop-blur"
+        class="w-60 shrink-0 snap-start rounded-2xl border border-edge bg-surface p-3 text-left shadow-[var(--shadow-raised)] backdrop-blur"
         @click="$emit('select', court.id)"
       >
         <div class="mb-1 flex items-baseline justify-between gap-2">
@@ -51,7 +51,7 @@ const visible = computed(() => props.courts.slice(0, 10))
 
       <div
         v-if="visible.length === 0"
-        class="w-full rounded-2xl border border-edge bg-surface/95 p-4 text-center text-sm text-txt-soft shadow-xl backdrop-blur"
+        class="w-full rounded-2xl border border-edge bg-surface p-4 text-center text-sm text-txt-soft shadow-[var(--shadow-raised)] backdrop-blur"
       >
         {{ t('map.noneNearby') }}
       </div>

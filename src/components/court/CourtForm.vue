@@ -57,7 +57,7 @@ function submit() {
           :key="key"
           type="button"
           class="flex items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-semibold transition"
-          :class="form.surface === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
+          :class="form.surface === key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
           @click="toggle('surface', key)"
         >
           <Icon :name="cfg.icon" :size="18" />{{ t(cfg.key) }}
@@ -73,7 +73,7 @@ function submit() {
           :key="key"
           type="button"
           class="flex flex-col items-center gap-1 rounded-xl border px-2 py-2.5 text-xs font-semibold transition"
-          :class="form.condition === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
+          :class="form.condition === key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
           @click="toggle('condition', key)"
         >
           <Icon :name="cfg.icon" :size="18" />{{ t(cfg.key) }}
@@ -89,7 +89,7 @@ function submit() {
           :key="key"
           type="button"
           class="flex flex-col items-center gap-1 rounded-xl border px-2 py-2.5 text-xs font-semibold transition"
-          :class="form.traffic === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
+          :class="form.traffic === key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
           @click="toggle('traffic', key)"
         >
           <Icon :name="cfg.icon" :size="18" />{{ t(cfg.key) }}
@@ -111,7 +111,7 @@ function submit() {
     <button
       type="submit"
       :disabled="submitting"
-      class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25 disabled:opacity-50"
+      class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-on-accent shadow-[var(--shadow-slab)]  disabled:opacity-50"
     >
       <Icon name="ball" :size="18" />
       {{ submitting ? t('form.submitting') : t('form.submit') }}

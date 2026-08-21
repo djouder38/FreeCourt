@@ -43,7 +43,7 @@ async function validate(type) {
     <p v-if="done" class="text-sm font-semibold text-ok">{{ t('validation.thanks') }}</p>
     <div v-else class="flex flex-wrap gap-2">
       <button
-        class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-ok/50 bg-ok/10 px-4 py-2.5 text-sm font-semibold text-ok"
+        class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-ok bg-surface px-4 py-2.5 text-sm font-semibold text-ok"
         @click="validate('existence')"
       >
         <Icon name="check" :size="16" /> {{ t('validation.exists') }}
@@ -55,7 +55,7 @@ async function validate(type) {
         <Icon name="checkCircle" :size="16" /> {{ t('validation.infoCorrect') }}
       </button>
       <button
-        class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-bad-soft/50 bg-bad/10 px-4 py-2.5 text-sm font-semibold text-bad-soft"
+        class="inline-flex items-center gap-1.5 min-h-11 rounded-full border border-bad-soft bg-surface px-4 py-2.5 text-sm font-semibold text-bad-soft"
         @click="flagOpen = true"
       >
         <Icon name="flag" :size="16" /> {{ t('validation.problem') }}

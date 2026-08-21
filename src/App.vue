@@ -48,7 +48,7 @@ const showTabBar = computed(() => !TASK_ROUTES.includes(route.name))
       >
         <div
           v-if="toast.state.visible"
-          class="flex items-center gap-3 rounded-2xl border border-edge bg-surface px-4 py-3 shadow-2xl"
+          class="flex items-center gap-3 rounded-2xl border border-edge bg-surface px-4 py-3 shadow-[var(--shadow-raised)]"
         >
           <Mascot :size="40" />
           <p class="text-sm font-semibold">{{ toast.state.message }}</p>

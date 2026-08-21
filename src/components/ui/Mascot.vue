@@ -9,10 +9,10 @@ defineProps({
 <template>
   <svg :width="size" :height="size" viewBox="0 0 120 120" fill="none" aria-hidden="true">
     <!-- bras -->
-    <path d="M14 62 Q2 54 8 42" stroke="#FF6B2B" stroke-width="6" stroke-linecap="round" />
-    <path d="M106 62 Q118 54 112 42" stroke="#FF6B2B" stroke-width="6" stroke-linecap="round" />
+    <path d="M14 62 Q2 54 8 42" stroke="var(--color-ball)" stroke-width="6" stroke-linecap="round" />
+    <path d="M106 62 Q118 54 112 42" stroke="var(--color-ball)" stroke-width="6" stroke-linecap="round" />
     <!-- ballon -->
-    <circle cx="60" cy="60" r="46" fill="#FF6B2B" stroke="#C94F1E" stroke-width="3" />
+    <circle cx="60" cy="60" r="46" fill="var(--color-ball)" stroke="var(--color-on-ball)" stroke-width="3" />
     <path d="M14 60 H106" stroke="#1a1a1a" stroke-width="3" />
     <path d="M60 14 V106" stroke="#1a1a1a" stroke-width="3" />
     <path d="M25 27 Q60 60 25 93" stroke="#1a1a1a" stroke-width="3" fill="none" />

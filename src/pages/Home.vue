@@ -281,14 +281,14 @@ function toggleFilter(field, key) {
       <!-- Les 2 actions principales, à parité -->
       <div class="space-y-2 border-t border-edge p-4">
         <button
-          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25"
+          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-on-accent shadow-[var(--shadow-slab)] "
           @click="findNearMe"
         >
           <Icon name="pin" :size="18" />
           {{ t('map.nearMe') }}
         </button>
         <button
-          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent-text hover:bg-accent/10"
+          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent-text hover:bg-accent text-on-accent"
           @click="startAdd"
         >
           <Icon name="ball" :size="18" />
@@ -321,7 +321,7 @@ function toggleFilter(field, key) {
         class="absolute right-4 top-4 z-20 flex flex-col items-end lg:hidden"
       >
         <button
-          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-lg"
+          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-[var(--shadow-slab)]"
           :aria-label="t('map.search')"
           :aria-expanded="searchOpen"
           @click="searchOpen ? closeSearch() : mapStore.toggleSearch()"
@@ -331,7 +331,7 @@ function toggleFilter(field, key) {
 
         <div
           v-if="searchOpen"
-          class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-2xl"
+          class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-[var(--shadow-raised)]"
         >
           <form class="flex gap-2" @submit.prevent="runSearch">
             <input
@@ -394,7 +394,7 @@ function toggleFilter(field, key) {
            marqueur ne se devine pas, il doit pouvoir s'expliquer. -->
       <button
         v-if="mapStore.mode === 'browse'"
-        class="absolute left-4 top-[4.75rem] z-10 grid h-12 w-12 place-items-center rounded-full border-2 border-edge bg-surface text-txt-soft shadow-lg"
+        class="absolute left-4 top-[4.75rem] z-10 grid h-12 w-12 place-items-center rounded-full border-2 border-edge bg-surface text-txt-soft shadow-[var(--shadow-slab)]"
         :aria-label="t('map.legend')"
         :title="t('map.legend')"
         @click="legendOpen = true"
@@ -407,14 +407,14 @@ function toggleFilter(field, key) {
       <!-- Filtres (le rond descend quand la recherche occupe le haut) -->
       <div v-if="mapStore.mode === 'browse'" ref="filtersBox" class="absolute left-4 top-4 z-10">
         <button
-          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent text-lg shadow-lg"
+          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent text-lg shadow-[var(--shadow-slab)]"
           :class="courtsStore.hasActiveFilters ? 'bg-accent text-on-accent' : 'bg-surface text-txt'"
           :aria-label="t('map.filters')"
           @click="filtersOpen = !filtersOpen"
         >
           <Icon name="filters" :size="20" />
         </button>
-        <div v-if="filtersOpen" class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-2xl">
+        <div v-if="filtersOpen" class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-[var(--shadow-raised)]">
           <div v-for="group in FILTER_GROUPS" :key="group.field" class="mb-3 last:mb-0">
             <p class="mb-1.5 text-xs font-bold uppercase tracking-wide text-txt-soft">{{ t(group.labelKey) }}</p>
             <div class="flex flex-wrap gap-1.5">
@@ -422,7 +422,7 @@ function toggleFilter(field, key) {
                 v-for="(cfg, key) in group.options"
                 :key="key"
                 class="inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold"
-                :class="courtsStore.filters[group.field] === key ? 'border-accent bg-accent/20' : 'border-edge bg-card'"
+                :class="courtsStore.filters[group.field] === key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
                 @click="toggleFilter(group.field, key)"
               >
                 <Icon :name="cfg.icon" :size="13" />{{ t(cfg.key) }}
@@ -443,7 +443,7 @@ function toggleFilter(field, key) {
            la cause et on offre la sortie. -->
       <div
         v-if="mapStore.mode === 'browse' && courtsStore.filtered.length === 0 && !courtsStore.loading"
-        class="absolute inset-x-3 bottom-24 z-10 rounded-2xl border border-edge bg-surface/95 p-4 text-center shadow-xl backdrop-blur lg:hidden"
+        class="absolute inset-x-3 bottom-24 z-10 rounded-2xl border border-edge bg-surface p-4 text-center shadow-[var(--shadow-raised)] backdrop-blur lg:hidden"
       >
         <p class="text-sm font-semibold">{{ t('map.noMatch') }}</p>
         <button
@@ -463,7 +463,7 @@ function toggleFilter(field, key) {
         :class="hasPosition ? 'bottom-56' : 'bottom-28'"
       >
         <button
-          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-lg"
+          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-[var(--shadow-slab)]"
           :class="{ 'animate-pulse': locating === 'searching' }"
           :aria-label="t('map.nearMe')"
           :title="t('map.nearMe')"
@@ -472,7 +472,7 @@ function toggleFilter(field, key) {
           <Icon name="pin" :size="20" />
         </button>
         <button
-          class="grid h-12 w-12 place-items-center rounded-full bg-accent text-on-accent shadow-lg shadow-accent/30"
+          class="grid h-12 w-12 place-items-center rounded-full bg-accent text-on-accent shadow-[var(--shadow-slab)] "
           :aria-label="t('map.addCourt')"
           :title="t('map.addCourt')"
           @click="startAdd"
@@ -492,14 +492,14 @@ function toggleFilter(field, key) {
       <!-- États chargement / erreur / géoloc (mobile) -->
       <p
         v-if="locating"
-        class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-txt/85 px-4 py-2 text-center text-xs shadow-lg"
+        class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-txt px-4 py-2 text-center text-xs shadow-[var(--shadow-slab)]"
         :class="{ 'bg-bad-soft text-on-accent': locating === 'denied' || locating === 'unsupported' }"
       >
         {{ t(LOCATING_MESSAGES[locating]) }}
       </p>
       <p
         v-else-if="courtsStore.loading"
-        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-txt/85 px-4 py-2 text-xs lg:hidden"
+        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-txt px-4 py-2 text-xs lg:hidden"
       >
         {{ t('map.loading') }}
       </p>

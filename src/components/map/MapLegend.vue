@@ -19,14 +19,14 @@ const DEMOS = {
 
 <template>
   <div
-    class="fixed inset-0 z-50 flex items-end justify-center bg-txt/50 p-0 sm:items-center sm:p-4"
+    class="fixed inset-0 z-50 flex items-end justify-center bg-txt/70 p-0 sm:items-center sm:p-4"
     role="dialog"
     aria-modal="true"
     :aria-label="t('map.legend')"
     @click.self="$emit('close')"
   >
     <div
-      class="max-h-[85dvh] w-full overflow-y-auto rounded-t-3xl border border-edge bg-surface p-5 shadow-2xl sm:max-w-md sm:rounded-3xl"
+      class="max-h-[85dvh] w-full overflow-y-auto rounded-t-3xl border border-edge bg-surface p-5 shadow-[var(--shadow-raised)] sm:max-w-md sm:rounded-3xl"
     >
       <div class="mb-4 flex items-start justify-between gap-3">
         <h2 class="font-display text-2xl leading-none tracking-wide">{{ t('legend.title') }}</h2>

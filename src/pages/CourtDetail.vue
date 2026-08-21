@@ -69,8 +69,8 @@ onMounted(load)
       <p
         class="mb-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs"
         :class="isStale(court.updated_at || court.created_at)
-          ? 'border-warn/40 bg-warn/10 text-warn'
-          : 'border-edge bg-card text-txt-soft'"
+          ? 'border-warn bg-surface text-warn'
+          : 'border-edge bg-surface text-txt-soft'"
       >
         <Icon :name="isStale(court.updated_at || court.created_at) ? 'alert' : 'checkCircle'" :size="13" />
         <template v-if="isStale(court.updated_at || court.created_at)">
@@ -88,7 +88,7 @@ onMounted(load)
         :href="`https://www.google.com/maps/dir/?api=1&destination=${court.lat},${court.lng}`"
         target="_blank"
         rel="noopener"
-        class="mb-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25"
+        class="mb-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-[var(--shadow-slab)] "
       >
         <Icon name="route" :size="16" /> {{ t('court.directions') }}
       </a>

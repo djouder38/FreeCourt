@@ -6,9 +6,9 @@ const props = defineProps({
 })
 
 const CONFIG = {
-  draft: { key: 'status.draft', classes: 'bg-warn/15 text-warn border-warn/40' },
-  validated: { key: 'status.validated', classes: 'bg-ok/15 text-ok border-ok/40' },
-  flagged: { key: 'status.flagged', classes: 'bg-bad/15 text-bad-soft border-bad-soft/40' },
+  draft: { key: 'status.draft', classes: 'bg-warn text-on-accent border-warn' },
+  validated: { key: 'status.validated', classes: 'bg-ok text-on-accent border-ok' },
+  flagged: { key: 'status.flagged', classes: 'bg-bad text-on-accent border-bad' },
 }
 </script>
 

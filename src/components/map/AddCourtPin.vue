@@ -42,7 +42,7 @@ async function searchAddress() {
     <div class="pointer-events-auto mb-24 space-y-2 px-3 lg:mb-8">
       <!-- Instruction : dit où on en est dans le geste -->
       <p
-        class="mx-auto w-fit rounded-full border border-edge bg-surface px-4 py-2 text-center text-sm font-semibold shadow-lg"
+        class="mx-auto w-fit rounded-full border border-edge bg-surface px-4 py-2 text-center text-sm font-semibold shadow-[var(--shadow-slab)]"
       >
         {{
           mapStore.pinLngLat
@@ -57,12 +57,12 @@ async function searchAddress() {
           v-model="address"
           type="search"
           :placeholder="t('pin.addressPlaceholder')"
-          class="min-w-0 flex-1 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm shadow-lg outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
+          class="min-w-0 flex-1 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm shadow-[var(--shadow-slab)] outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
         />
         <button
           type="submit"
           :disabled="searching"
-          class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-surface text-txt shadow-lg disabled:opacity-50"
+          class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-surface text-txt shadow-[var(--shadow-slab)] disabled:opacity-50"
           :aria-label="t('pin.searchAddress')"
         >
           <span v-if="searching" class="text-sm font-bold">…</span>
@@ -74,14 +74,14 @@ async function searchAddress() {
       <!-- Actions -->
       <div class="flex justify-center gap-3 pt-1">
         <button
-          class="min-h-12 rounded-full border border-edge bg-surface px-6 py-3 text-sm font-bold uppercase tracking-wide shadow-lg"
+          class="min-h-12 rounded-full border border-edge bg-surface px-6 py-3 text-sm font-bold uppercase tracking-wide shadow-[var(--shadow-slab)]"
           @click="emit('cancel')"
         >
           {{ t('pin.cancel') }}
         </button>
         <button
           v-if="mapStore.pinLngLat"
-          class="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-8 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/30"
+          class="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-8 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-[var(--shadow-slab)] "
           @click="emit('confirm')"
         >
           <Icon name="check" :size="16" />

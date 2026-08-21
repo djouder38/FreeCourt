@@ -1,65 +1,123 @@
 @import 'tailwindcss';
 
-/* FreeCourt tient deux mondes : le clair est le defaut (l'app s'utilise
-   dehors en plein jour), le sombre est le mode nuit, sous les projecteurs.
-   Les valeurs ci-dessous sont le mode CLAIR ; le bloc data-theme='dark'
-   plus bas les remplace. Les couleurs de sens (or, rouge, vert) changent
-   de valeur d'un mode a l'autre : un or lisible sur du noir ne l'est pas
-   sur du beton pale. */
+/* ─────────────────────────────────────────────────────────────────────────
+   FreeCourt — béton et marquage au sol
+
+   Le monde vient du terrain lui-même : une dalle de béton gris, des lignes
+   peintes dessus, un ballon orange par-dessus. D'où trois règles qui
+   gouvernent tout le reste :
+
+   1. Le béton est GRIS, jamais crème. Un fond beige "chaleureux" est le
+      réflexe par défaut ; le vrai béton tire vers le froid.
+   2. La couleur est de la PEINTURE : elle couvre. Aucun aplat translucide,
+      aucun état fabriqué en baissant l'opacité d'une teinte. Un élément
+      actif est peint, pas voilé.
+   3. L'interface est le terrain (bleu de peinture), les terrains sont le
+      ballon (orange). Contenu et interface ne parlent jamais la même
+      couleur — c'est ce qui rend un marqueur repérable au premier coup d'œil.
+   ───────────────────────────────────────────────────────────────────────── */
+
 @theme {
-  --color-court: #f2efea; /* beton pale : fond de l'app */
-  --color-surface: #ffffff;
-  --color-card: #faf8f5;
-  --color-edge: #cfc8bd;
-  --color-txt: #1b1917;
-  --color-txt-soft: #63605b;
-  --color-accent: #ff6b2b; /* le orange de marque ne bouge jamais */
-  --color-accent-text: #b4470f; /* mais en TEXTE sur fond clair il faut le foncer */
-  --color-on-accent: #14100d; /* encre posee SUR un fond colore : ne suit jamais le theme */
-  --color-gold: #9a6b00;
-  --color-ok: #15803d;
-  --color-warn: #a35a06;
-  --color-bad: #dc2626;
-  --color-bad-soft: #b91c1c;
+  /* Jour : dalle lavée au soleil. Gris neutres, pas de beige. */
+  --color-court: #b9bab7; /* le béton : fond de l'app */
+  --color-surface: #eeefed; /* dalle claire : panneaux, barres */
+  --color-card: #dcdddb; /* dalle intermédiaire */
+  --color-edge: #8e918d; /* joint de dalle : un vrai trait, pas un filet */
+  --color-txt: #16181a;
+  --color-txt-soft: #545a5e;
 
-  --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  /* La peinture du terrain. Franche, saturée, elle couvre le béton. */
+  --color-accent: #1550b4;
+  --color-accent-text: #12408f; /* la même, assombrie pour du texte sur clair */
+  --color-on-accent: #ffffff; /* ce qu'on écrit SUR la peinture */
+
+  /* Le ballon : réservé aux terrains eux-mêmes, jamais à l'interface. */
+  --color-ball: #e2571c;
+  --color-on-ball: #1a0d05; /* encre sur le ballon : l orange ne porte pas le blanc */
+
+  /* Marquage au sol : le blanc des lignes, le jaune des zones. */
+  --color-line: #f4f2ec;
+  --color-mark: #d99b06;
+
+  --color-gold: #8a6200;
+  --color-ok: #15703c;
+  --color-warn: #9a5a06;
+  --color-bad: #c62828;
+  --color-bad-soft: #a81f1f;
+
+  /* Signalétique urbaine plutôt que display sportif générique :
+     Big Shoulders vient du lettrage de voirie, Archivo des titres de presse.
+     Ni Inter ni Bebas, qui sont les deux réflexes du genre. */
+  --font-display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --font-sans: 'Archivo', system-ui, sans-serif;
+
+  /* Le béton ne flotte pas : une ombre courte et franche, jamais un halo. */
+  --shadow-slab: 0 2px 0 0 rgb(0 0 0 / 0.16);
+  --shadow-raised: 0 3px 0 0 rgb(0 0 0 / 0.2), 0 6px 14px -6px rgb(0 0 0 / 0.35);
 }
 
-/* Mode nuit */
+/* Nuit : le même béton sous les projecteurs. */
 :root[data-theme='dark'] {
-  --color-court: #0f0f0f;
-  --color-surface: #1a1a1a;
-  --color-card: #242424;
-  --color-edge: #3a3a3a;
-  --color-txt: #ffffff;
-  --color-txt-soft: #9ca3af;
-  --color-accent: #ff6b2b;
-  --color-accent-text: #ff6b2b;
-  --color-gold: #ffd700;
-  --color-ok: #22c55e;
-  --color-warn: #f59e0b;
-  --color-bad: #ef4444;
-  --color-bad-soft: #f87171;
+  --color-court: #17191b;
+  --color-surface: #222528;
+  --color-card: #2b2f32;
+  --color-edge: #4d5256;
+  --color-txt: #f1f2f1;
+  --color-txt-soft: #9aa1a6;
+  --color-accent: #2f6fe0;
+  --color-accent-text: #6c9df0;
+  --color-on-accent: #0b1526;
+  --color-ball: #f2662a;
+  --color-on-ball: #1a0d05;
+  --color-line: #e9e7e1;
+  --color-mark: #e8b02a;
+  --color-gold: #e0b436;
+  --color-ok: #37b866;
+  --color-warn: #dd9520;
+  --color-bad: #e14b4b;
+  --color-bad-soft: #f08585;
+  --shadow-slab: 0 2px 0 0 rgb(0 0 0 / 0.5);
+  --shadow-raised: 0 3px 0 0 rgb(0 0 0 / 0.55), 0 6px 16px -6px rgb(0 0 0 / 0.7);
 }
 
-/* Avant que le JS ait pose data-theme, on suit le systeme pour eviter
+/* Avant que le JS ait posé data-theme, on suit le système pour éviter
    un flash de thème inverse. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-court: #0f0f0f;
-    --color-surface: #1a1a1a;
-    --color-card: #242424;
-    --color-edge: #3a3a3a;
-    --color-txt: #ffffff;
-    --color-txt-soft: #9ca3af;
-    --color-accent-text: #ff6b2b;
-    --color-gold: #ffd700;
-    --color-ok: #22c55e;
-    --color-warn: #f59e0b;
-    --color-bad: #ef4444;
-    --color-bad-soft: #f87171;
+    --color-court: #17191b;
+    --color-surface: #222528;
+    --color-card: #2b2f32;
+    --color-edge: #4d5256;
+    --color-txt: #f1f2f1;
+    --color-txt-soft: #9aa1a6;
+    --color-accent: #2f6fe0;
+    --color-accent-text: #6c9df0;
+    --color-on-accent: #0b1526;
+    --color-ball: #f2662a;
+    --color-mark: #e8b02a;
+    --color-gold: #e0b436;
+    --color-ok: #37b866;
+    --color-warn: #dd9520;
+    --color-bad: #e14b4b;
+    --color-bad-soft: #f08585;
   }
+}
+
+/* Le grain du béton. Une turbulence SVG en fond, assez basse pour ne jamais
+   gêner la lecture, assez présente pour qu'aucune surface ne soit un aplat
+   numérique parfait. C'est la différence entre une couleur et une matière. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)' opacity='0.32'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='dark'] body::before {
+  opacity: 0.28;
 }
 
 html,
@@ -148,13 +206,14 @@ textarea {
 }
 
 /* Pastille de regroupement des terrains */
+/* Aplat plein plutot qu un degrade radial : le faux volume en bille 3D
+   etait le dernier effet purement decoratif de la carte. */
 .fc-cluster {
   position: relative;
-  background: radial-gradient(circle at 35% 30%, #ff8a54, #e8551a);
-  border: 3px solid rgba(18, 20, 26, 0.9);
-  box-shadow:
-    0 0 0 4px rgba(255, 107, 43, 0.18),
-    0 4px 12px rgba(0, 0, 0, 0.45);
+  background: var(--color-ball);
+  color: var(--color-on-ball);
+  border: 3px solid var(--color-court);
+  box-shadow: var(--shadow-raised);
 }
 
 .fc-cluster:hover {

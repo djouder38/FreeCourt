@@ -49,7 +49,7 @@ function onTouchEnd() {
 <template>
   <div class="fixed inset-0 z-40" @click.self="emit('close')">
     <div
-      class="absolute inset-x-0 bottom-0 flex flex-col rounded-t-3xl border-t border-edge bg-surface shadow-2xl"
+      class="absolute inset-x-0 bottom-0 flex flex-col rounded-t-3xl border-t border-edge bg-surface shadow-[var(--shadow-raised)]"
       :style="heightStyle"
     >
       <div

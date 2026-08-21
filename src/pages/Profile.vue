@@ -59,7 +59,7 @@ function logout() {
 
       <!-- Accès de développement : ouvre la connexion locale -->
       <button
-        class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-card text-txt-soft hover:text-txt"
+        class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-surface text-txt-soft hover:text-txt"
         :aria-label="userStore.isLoggedIn ? t('profile.signOut') : t('profile.signIn')"
         :title="userStore.isLoggedIn ? t('profile.signOut') : t('profile.signIn')"
         @click="userStore.isLoggedIn ? logout() : (loginOpen = !loginOpen)"
@@ -82,7 +82,7 @@ function logout() {
             <ContributorBadge :status="userStore.profile.status" />
             <span
               v-if="userStore.isAdmin"
-              class="rounded-full border border-accent/60 bg-accent/10 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-accent-text"
+              class="rounded-full border border-accent bg-accent text-on-accent px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-accent-text"
             >
               Admin
             </span>
@@ -161,7 +161,7 @@ function logout() {
           :key="choice.key"
           type="button"
           class="rounded-2xl border px-3 py-3 text-center transition"
-          :class="theme.mode.value === choice.key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
+          :class="theme.mode.value === choice.key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
           @click="theme.set(choice.key)"
         >
           <span class="block text-sm font-bold">{{ t(choice.labelKey) }}</span>
@@ -178,7 +178,7 @@ function logout() {
           :key="lang.key"
           type="button"
           class="min-h-12 rounded-2xl border px-3 py-3 text-center text-sm font-bold transition"
-          :class="locale === lang.key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
+          :class="locale === lang.key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
           :lang="lang.key"
           :aria-current="locale === lang.key ? 'true' : undefined"
           @click="setLocale(lang.key)"
