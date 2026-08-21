@@ -39,7 +39,7 @@ async function onSubmit(form) {
 
 <template>
   <div class="mx-auto max-w-lg px-4 pb-28 pt-4 lg:pb-8">
-    <button class="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
+    <button class="-mx-2 mb-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
       <Icon name="back" :size="16" /> Retour
     </button>
 

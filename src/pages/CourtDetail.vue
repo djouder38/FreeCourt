@@ -39,7 +39,7 @@ onMounted(load)
 
 <template>
   <div class="mx-auto max-w-2xl px-4 pb-28 pt-4 lg:pb-8">
-    <button class="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
+    <button class="-mx-2 mb-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.back()">
       <Icon name="back" :size="16" /> Retour
     </button>
 
@@ -87,7 +87,7 @@ onMounted(load)
         :href="`https://www.google.com/maps/dir/?api=1&destination=${court.lat},${court.lng}`"
         target="_blank"
         rel="noopener"
-        class="mb-6 inline-flex items-center gap-2 rounded-full border border-edge bg-card px-5 py-2.5 text-sm font-bold uppercase tracking-wide"
+        class="mb-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/25"
       >
         <Icon name="route" :size="16" /> S'y rendre
       </a>

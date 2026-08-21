@@ -19,7 +19,7 @@ const THEME_CHOICES = [
 
 <template>
   <div class="mx-auto max-w-lg px-4 pb-28 pt-6 lg:pb-8">
-    <button class="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.push('/')">
+    <button class="-mx-2 mb-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-semibold text-txt-soft hover:text-txt" @click="router.push('/')">
       <Icon name="back" :size="16" /> Retour à la carte
     </button>
     <h1 class="mb-6 font-display text-4xl tracking-wide">Profil</h1>

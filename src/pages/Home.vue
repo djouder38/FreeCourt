@@ -178,7 +178,7 @@ function toggleFilter(field, key) {
       </div>
 
       <div v-if="selectedCourt" class="p-4">
-        <button class="mb-3 text-xs font-semibold text-txt-soft hover:text-txt" @click="courtsStore.select(null)">
+        <button class="-mx-2 mb-2 inline-flex min-h-11 items-center px-2 text-xs font-semibold text-txt-soft hover:text-txt" @click="courtsStore.select(null)">
           ← Retour à la liste
         </button>
         <CourtCard :court="selectedCourt" @open="openDetail(selectedCourt.id)" />
@@ -244,18 +244,9 @@ function toggleFilter(field, key) {
           <button
             type="submit"
             :disabled="searching"
-            class="grid shrink-0 place-items-center rounded-full bg-accent px-4 text-sm font-bold text-on-accent shadow-lg"
+            class="min-h-11 shrink-0 rounded-full bg-accent px-5 text-sm font-bold uppercase tracking-wide text-on-accent shadow-lg"
           >
-            <span v-if="searching">…</span>
-            <Icon v-else name="search" :size="18" />
-          </button>
-          <button
-            type="button"
-            aria-label="Fermer la recherche"
-            class="grid shrink-0 place-items-center rounded-full border border-edge bg-surface px-3 text-txt-soft shadow-lg"
-            @click="closeSearch"
-          >
-            <Icon name="close" :size="18" />
+            {{ searching ? '…' : 'OK' }}
           </button>
         </form>
         <p v-if="searchError" class="mt-2 rounded-full bg-surface px-4 py-2 text-center text-xs text-txt-soft shadow-lg">
@@ -272,6 +263,20 @@ function toggleFilter(field, key) {
           </button>
         </div>
       </div>
+
+      <!-- Recherche : symétrique des filtres, en haut à droite. Le champ
+           ne s'ouvre qu'au clic pour ne pas manger la carte au repos. -->
+      <button
+        class="absolute right-4 z-10 grid h-12 w-12 place-items-center rounded-full border-2 border-accent shadow-lg transition-all lg:hidden"
+        :class="[
+          searchOpen ? 'top-20 bg-accent text-on-accent' : 'top-4 bg-surface text-txt',
+        ]"
+        :aria-label="searchOpen ? 'Fermer la recherche' : 'Chercher un lieu'"
+        :aria-expanded="searchOpen"
+        @click="searchOpen ? closeSearch() : mapStore.toggleSearch()"
+      >
+        <Icon :name="searchOpen ? 'close' : 'search'" :size="20" />
+      </button>
 
       <!-- Filtres (le rond descend quand la recherche occupe le haut) -->
       <div class="absolute left-4 z-10 transition-all" :class="searchOpen ? 'top-20 lg:top-4' : 'top-4'">
@@ -290,7 +295,7 @@ function toggleFilter(field, key) {
               <button
                 v-for="(cfg, key) in group.options"
                 :key="key"
-                class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold"
+                class="inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold"
                 :class="courtsStore.filters[group.field] === key ? 'border-accent bg-accent/20' : 'border-edge bg-card'"
                 @click="toggleFilter(group.field, key)"
               >

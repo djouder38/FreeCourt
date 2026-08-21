@@ -53,7 +53,7 @@ function onTouchEnd() {
       :style="heightStyle"
     >
       <div
-        class="flex shrink-0 cursor-grab justify-center py-3 touch-none"
+        class="flex shrink-0 cursor-grab justify-center py-4 touch-none"
         @touchstart="onTouchStart"
         @touchmove="onTouchMove"
         @touchend="onTouchEnd"
@@ -62,7 +62,7 @@ function onTouchEnd() {
         @mouseup="onTouchEnd"
         @mouseleave="dragStartY !== null && onTouchEnd()"
       >
-        <div class="h-1.5 w-12 rounded-full bg-edge"></div>
+        <div class="h-1.5 w-12 rounded-full bg-txt-soft"></div>
       </div>
       <div class="min-h-0 flex-1 overflow-y-auto px-4 pb-8">
         <slot />

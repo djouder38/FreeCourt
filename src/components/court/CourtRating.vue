@@ -54,13 +54,13 @@ async function vote(review) {
     <h3 class="mb-2 font-display text-xl tracking-wide">Avis</h3>
 
     <div class="mb-4 rounded-2xl border border-edge bg-card p-4">
-      <div class="mb-2 flex gap-1 text-2xl">
+      <div class="mb-2 flex text-2xl">
         <button
           v-for="n in 5"
           :key="n"
           type="button"
-          class="transition"
-          :class="(hover || rating) >= n ? 'text-gold' : 'text-edge'"
+          class="grid h-11 w-11 place-items-center transition"
+          :class="(hover || rating) >= n ? 'text-gold' : 'text-txt-soft'"
           :aria-label="`${n} étoiles`"
           @mouseenter="hover = n"
           @mouseleave="hover = 0"
@@ -78,7 +78,7 @@ async function vote(review) {
       <button
         type="button"
         :disabled="submitting"
-        class="rounded-full bg-accent text-on-accent px-5 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
+        class="min-h-11 rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-on-accent disabled:opacity-50"
         @click="submit"
       >
         {{ submitting ? 'Envoi…' : 'Poster' }}
@@ -92,7 +92,7 @@ async function vote(review) {
         <p v-if="review.text" class="mb-2 text-sm leading-relaxed">{{ review.text }}</p>
         <button
           type="button"
-          class="inline-flex items-center gap-1.5 text-xs font-semibold text-txt-soft hover:text-txt"
+          class="-mx-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-xs font-semibold text-txt-soft hover:text-txt"
           :class="{ 'text-accent-text': votedIds.has(review.id) }"
           @click="vote(review)"
         >

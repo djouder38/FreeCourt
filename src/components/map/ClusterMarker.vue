@@ -11,7 +11,7 @@ const size = computed(() => {
   if (props.count >= 50) return 62
   if (props.count >= 20) return 54
   if (props.count >= 10) return 48
-  return 42
+  return 44
 })
 
 const label = computed(() => (props.count > 999 ? '999+' : String(props.count)))

@@ -117,10 +117,26 @@ textarea {
   background-clip: content-box;
 }
 
-/* Marqueurs FreeCourt posés sur la carte MapLibre */
+/* Marqueurs FreeCourt posés sur la carte MapLibre.
+   Le dessin reste à 38px, mais la zone de contact est portée à 44px par un
+   pseudo-élément : le marqueur est l'objet le plus tapé de l'app, et il est
+   posé sur une surface qui se déplace au doigt — un tap imprécis devenait
+   un glissement de carte. */
 .fc-marker {
   cursor: pointer;
+  position: relative;
   transition: transform 0.15s ease;
+}
+
+.fc-marker::after,
+.fc-cluster::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
 }
 
 .fc-marker:hover {
@@ -133,6 +149,7 @@ textarea {
 
 /* Pastille de regroupement des terrains */
 .fc-cluster {
+  position: relative;
   background: radial-gradient(circle at 35% 30%, #ff8a54, #e8551a);
   border: 3px solid rgba(18, 20, 26, 0.9);
   box-shadow:
