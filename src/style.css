@@ -185,3 +185,22 @@ textarea {
   border: 3px solid var(--color-surface);
   box-shadow: 0 0 0 4px rgba(47, 127, 216, 0.25);
 }
+
+/* Réglage système « réduire les animations » : vertiges, migraines, troubles
+   vestibulaires. On ne supprime pas les transitions (un changement instantané
+   désoriente aussi), on les ramène à une durée imperceptible. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .fc-marker:hover,
+  .fc-cluster:hover {
+    transform: none;
+  }
+}

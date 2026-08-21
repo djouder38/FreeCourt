@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
 import Icon from '../ui/Icon.vue'
+import { useToast } from '../../composables/useToast.js'
 
 // Avis : note 1-5 étoiles + texte, vote "utile" sur chaque avis.
 const props = defineProps({
@@ -10,6 +11,7 @@ const props = defineProps({
 const emit = defineEmits(['posted'])
 
 const courtsStore = useCourtsStore()
+const toast = useToast()
 const rating = ref(0)
 const hover = ref(0)
 const text = ref('')
@@ -28,6 +30,7 @@ async function submit() {
     await courtsStore.addReview(props.court.id, rating.value, text.value.trim())
     rating.value = 0
     text.value = ''
+    toast.show('Avis publié. Les autres joueurs te remercient.')
     emit('posted')
   } catch (err) {
     console.error(err)
@@ -43,6 +46,7 @@ async function vote(review) {
   review.helpful_count += 1
   try {
     await courtsStore.voteHelpful(review.id)
+    toast.show('Noté : cet avis est utile.')
   } catch (err) {
     console.error(err)
   }

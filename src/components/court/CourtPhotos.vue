@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
 import Icon from '../ui/Icon.vue'
+import { useToast } from '../../composables/useToast.js'
 
 // Galerie 3 photos max + upload vers Supabase Storage.
 const props = defineProps({
@@ -10,6 +11,7 @@ const props = defineProps({
 const emit = defineEmits(['uploaded'])
 
 const courtsStore = useCourtsStore()
+const toast = useToast()
 const uploading = ref(false)
 const error = ref(null)
 const fileInput = ref(null)
@@ -30,6 +32,7 @@ async function onFile(e) {
   error.value = null
   try {
     await courtsStore.addPhoto(props.court.id, file)
+    toast.show('Photo ajoutée au terrain.')
     emit('uploaded')
   } catch (err) {
     console.error(err)

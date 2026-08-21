@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
 import FlagIssue from './FlagIssue.vue'
 import Icon from '../ui/Icon.vue'
+import { useToast } from '../../composables/useToast.js'
 
 // Validation communautaire : "le terrain existe", "les infos sont bonnes",
 // ou signalement d'un problème. 5 validations => le terrain passe en « validé ».
@@ -12,6 +13,7 @@ const props = defineProps({
 const emit = defineEmits(['validated'])
 
 const courtsStore = useCourtsStore()
+const toast = useToast()
 const done = ref(null)
 const flagOpen = ref(false)
 const error = ref(null)
@@ -21,6 +23,7 @@ async function validate(type) {
   try {
     await courtsStore.validate(props.court.id, type)
     done.value = type
+    toast.show('Merci, ta validation compte.')
     emit('validated')
   } catch (err) {
     console.error(err)

@@ -131,7 +131,9 @@ function syncMarkers() {
 
 function zoomIntoCluster(clusterId, center) {
   const target = Math.min(index.getClusterExpansionZoom(clusterId), 17)
-  map.easeTo({ center, zoom: target + 0.2, duration: 500 })
+  const to = { center, zoom: target + 0.2 }
+  if (prefersReducedMotion()) map.jumpTo(to)
+  else map.easeTo({ ...to, duration: 500 })
 }
 
 function clearMarkers() {
@@ -177,8 +179,16 @@ function showUserPosition(lngLat) {
   if (!userMarker._map) userMarker.addTo(map)
 }
 
+// Le CSS ne peut rien contre les animations de camera MapLibre : on saute
+// directement a destination quand le systeme demande moins de mouvement.
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+}
+
 function flyTo(lngLat, zoom = 14) {
-  map?.flyTo({ center: [lngLat.lng, lngLat.lat], zoom })
+  const target = { center: [lngLat.lng, lngLat.lat], zoom }
+  if (prefersReducedMotion()) map?.jumpTo(target)
+  else map?.flyTo(target)
 }
 
 function locateMe() {

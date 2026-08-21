@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useCourtsStore } from '../../stores/courts.js'
+import { useToast } from '../../composables/useToast.js'
 
 // Signalement d'un problème sur un terrain (n'existe plus, infos fausses…).
 const props = defineProps({
@@ -9,6 +10,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'flagged'])
 
 const courtsStore = useCourtsStore()
+const toast = useToast()
 const note = ref('')
 const submitting = ref(false)
 const error = ref(null)
@@ -22,6 +24,7 @@ async function submit() {
   error.value = null
   try {
     await courtsStore.validate(props.court.id, 'flag_issue', note.value.trim())
+    toast.show('Signalement envoyé. On va regarder ça.')
     emit('flagged')
   } catch (err) {
     console.error(err)
