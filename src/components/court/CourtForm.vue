@@ -91,7 +91,7 @@ function submit() {
           :class="form.traffic === key ? 'border-accent bg-accent/15' : 'border-edge bg-card'"
           @click="toggle('traffic', key)"
         >
-          <span class="text-base">{{ cfg.icon }}</span>{{ cfg.label }}
+          <Icon :name="cfg.icon" :size="18" />{{ cfg.label }}
         </button>
       </div>
     </fieldset>

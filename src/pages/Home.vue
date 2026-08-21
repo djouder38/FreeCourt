@@ -261,8 +261,8 @@ function toggleFilter(field, key) {
       <!-- Filtres (le rond descend quand la recherche occupe le haut) -->
       <div class="absolute left-4 z-10 transition-all" :class="searchOpen ? 'top-20 lg:top-4' : 'top-4'">
         <button
-          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-lg shadow-lg"
-          :class="{ 'bg-accent text-court': courtsStore.hasActiveFilters }"
+          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent text-lg shadow-lg"
+          :class="courtsStore.hasActiveFilters ? 'bg-accent text-court' : 'bg-surface text-white'"
           aria-label="Filtres"
           @click="filtersOpen = !filtersOpen"
         >
