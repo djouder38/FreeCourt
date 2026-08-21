@@ -293,8 +293,7 @@ function toggleFilter(field, key) {
            déploie vers le bas, en miroir des filtres à gauche. -->
       <div v-if="mapStore.mode === 'browse'" ref="searchBox" class="absolute right-4 top-4 z-20 lg:hidden">
         <button
-          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent shadow-lg"
-          :class="searchOpen ? 'bg-accent text-on-accent' : 'bg-surface text-txt'"
+          class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-lg"
           aria-label="Chercher un terrain ou un lieu"
           :aria-expanded="searchOpen"
           @click="searchOpen ? closeSearch() : mapStore.toggleSearch()"
@@ -304,7 +303,7 @@ function toggleFilter(field, key) {
 
         <div
           v-if="searchOpen"
-          class="mt-2 w-[min(19rem,calc(100vw-2rem))] rounded-2xl border border-edge bg-surface p-3 shadow-2xl"
+          class="mt-2 w-64 rounded-2xl border border-edge bg-surface p-4 shadow-2xl"
         >
           <form class="flex gap-2" @submit.prevent="runSearch">
             <input
