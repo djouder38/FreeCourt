@@ -12,6 +12,7 @@ import BottomSheet from '../components/ui/BottomSheet.vue'
 import StatusChip from '../components/ui/StatusChip.vue'
 import Mascot from '../components/ui/Mascot.vue'
 import Icon from '../components/ui/Icon.vue'
+import NearbyStrip from '../components/court/NearbyStrip.vue'
 
 const router = useRouter()
 const courtsStore = useCourtsStore()
@@ -34,20 +35,34 @@ const LOCATING_MESSAGES = {
   unsupported: 'Ton navigateur ne gère pas la géolocalisation.',
 }
 
-function onLocating({ status }) {
+function onLocating({ status, position }) {
   locating.value = status === 'done' ? null : status
+  if (position) courtsStore.setUserPosition(position)
   if (status === 'denied' || status === 'unsupported') {
     setTimeout(() => (locating.value = null), 4000)
   }
 }
+
+const hasPosition = computed(() => Boolean(courtsStore.userPosition))
 
 function findNearMe() {
   courtsStore.select(null)
   mapView.value?.locateMe()
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (courtsStore.courts.length === 0) courtsStore.load()
+
+  // On ne déclenche PAS la demande de permission à l'arrivée : un prompt
+  // système avant même d'avoir vu l'app fait fuir. Mais si la permission est
+  // déjà accordée, on localise sans rien demander — dès la 2e visite, la
+  // carte s'ouvre donc directement sur les terrains proches.
+  try {
+    const status = await navigator.permissions?.query({ name: 'geolocation' })
+    if (status?.state === 'granted') mapView.value?.locateMe()
+  } catch {
+    /* Permissions API absente : on attend que l'utilisateur demande */
+  }
 })
 
 function onSelect(id) {
@@ -285,26 +300,27 @@ function toggleFilter(field, key) {
           </div>
         </div>
       </div>
-      <!-- Les 2 actions principales (mobile), juste au-dessus de la tab bar -->
-      <div
+      <!-- Les terrains proches remplacent les deux CTA : on montre, on ne
+           demande pas. « Ajouter » redevient une action secondaire flottante. -->
+      <NearbyStrip
         v-if="mapStore.mode === 'browse'"
-        class="absolute inset-x-3 bottom-24 z-10 flex flex-col gap-2 lg:hidden"
+        :courts="courtsStore.nearby"
+        :locating="locating"
+        :has-position="hasPosition"
+        @select="onSelect"
+        @locate="findNearMe"
+      />
+
+      <button
+        v-if="mapStore.mode === 'browse'"
+        class="absolute right-4 z-10 grid h-14 w-14 place-items-center rounded-full bg-accent text-on-accent shadow-xl shadow-accent/30 lg:hidden"
+        :class="hasPosition ? 'bottom-56' : 'bottom-40'"
+        aria-label="Ajouter un terrain"
+        title="Ajouter un terrain"
+        @click="startAdd"
       >
-        <button
-          class="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3.5 text-sm font-bold uppercase tracking-wide text-on-accent shadow-xl shadow-accent/30"
-          @click="findNearMe"
-        >
-          <Icon name="pin" :size="18" />
-          Trouver un terrain près de moi
-        </button>
-        <button
-          class="flex w-full items-center justify-center gap-2 rounded-full border-2 border-accent bg-surface/95 py-3 text-sm font-bold uppercase tracking-wide text-accent-text shadow-xl backdrop-blur"
-          @click="startAdd"
-        >
-          <Icon name="ball" :size="18" />
-          Ajouter un terrain
-        </button>
-      </div>
+        <Icon name="ball" :size="24" />
+      </button>
 
       <!-- Mode pin -->
       <AddCourtPin

@@ -9,6 +9,7 @@ import ValidationPanel from '../components/community/ValidationPanel.vue'
 import StatusChip from '../components/ui/StatusChip.vue'
 import Mascot from '../components/ui/Mascot.vue'
 import Icon from '../components/ui/Icon.vue'
+import { formatAge, isStale } from '../services/geo.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -59,7 +60,26 @@ onMounted(load)
         <span v-if="court.locked" class="ml-2 inline-flex items-center gap-1"><Icon name="lock" :size="13" />verrouillé par la communauté</span>
       </p>
 
-      <CourtBadges :court="court" class="mb-4" />
+      <CourtBadges :court="court" class="mb-3" />
+
+      <!-- Fraicheur : le produit promet que l etat d un terrain se degrade.
+           Afficher un etat sans dire quand il a ete constate, c est presenter
+           une info peut-etre fausse comme un fait. -->
+      <p
+        class="mb-4 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs"
+        :class="isStale(court.updated_at || court.created_at)
+          ? 'border-warn/40 bg-warn/10 text-warn'
+          : 'border-edge bg-card text-txt-soft'"
+      >
+        <Icon :name="isStale(court.updated_at || court.created_at) ? 'alert' : 'checkCircle'" :size="13" />
+        <template v-if="isStale(court.updated_at || court.created_at)">
+          Décrit {{ formatAge(court.updated_at || court.created_at) }} — personne n'a confirmé depuis. Tu y es ?
+        </template>
+        <template v-else>
+          Décrit {{ formatAge(court.updated_at || court.created_at) }}
+          <template v-if="court.validation_count"> · confirmé par {{ court.validation_count }} joueur{{ court.validation_count > 1 ? 's' : '' }}</template>
+        </template>
+      </p>
 
       <p v-if="court.description" class="mb-6 leading-relaxed text-txt-soft">{{ court.description }}</p>
 

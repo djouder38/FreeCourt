@@ -127,6 +127,19 @@ function showPin(lngLat) {
   if (!pinMarker._map) pinMarker.addTo(map)
 }
 
+let userMarker = null
+
+// Sans point 'vous etes ici', se geolocaliser ne montre rien a l ecran.
+function showUserPosition(lngLat) {
+  if (!userMarker) {
+    const el = document.createElement('div')
+    el.className = 'fc-user-dot'
+    userMarker = new maplibregl.Marker({ element: el })
+  }
+  userMarker.setLngLat([lngLat.lng, lngLat.lat])
+  if (!userMarker._map) userMarker.addTo(map)
+}
+
 function flyTo(lngLat, zoom = 14) {
   map?.flyTo({ center: [lngLat.lng, lngLat.lat], zoom })
 }
@@ -139,8 +152,10 @@ function locateMe() {
   emit('locating', { status: 'searching' })
   navigator.geolocation.getCurrentPosition(
     (pos) => {
-      flyTo({ lng: pos.coords.longitude, lat: pos.coords.latitude }, 14)
-      emit('locating', { status: 'done' })
+      const position = { lng: pos.coords.longitude, lat: pos.coords.latitude }
+      flyTo(position, 14)
+      showUserPosition(position)
+      emit('locating', { status: 'done', position })
     },
     () => emit('locating', { status: 'denied' }),
     { enableHighAccuracy: true, timeout: 8000 },

@@ -157,3 +157,14 @@ textarea {
 .maplibregl-ctrl-attrib a {
   color: #9ca3af !important;
 }
+
+/* Point « vous êtes ici » : un bleu franc, distinct de l'orange des terrains
+   pour qu'on ne le confonde jamais avec un playground. */
+.fc-user-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2f7fd8;
+  border: 3px solid var(--color-surface);
+  box-shadow: 0 0 0 4px rgba(47, 127, 216, 0.25);
+}

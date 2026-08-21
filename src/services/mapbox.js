@@ -61,6 +61,37 @@ const RAIL_RE = /rail|transit|subway|tram/i
 const CASING_RE = /casing|outline/i
 const PLACE_RE = /place|city|town|country|state|continent/i
 
+
+// Carte abstraite : FreeCourt ne montre que ce qui aide a trouver ou juger un
+// terrain. Tout le reste est du bruit et se paie en lisibilite au soleil.
+// On garde les reperes qui servent a se situer (voies, eau, parcs, noms de
+// lieux) et on retire le tissu commercial et administratif.
+const HIDDEN_SOURCE_LAYERS = new Set([
+  'poi', // commerces, restaurants, distributeurs : rien a voir avec le basket
+  'housenumber', // numeros de rue : illisibles et inutiles a cette echelle
+  'building', // le bati individuel encombre sans aider a se reperer
+  'aeroway', // pistes d aeroport
+  'transportation_name', // noms de rue : on cherche un terrain, pas une adresse
+  'boundary', // frontieres administratives : aucune utilite pour un playground
+])
+
+// Meme logique par id, pour les couches que le source-layer ne suffit pas a
+// designer (chemins de service, labels de rue a bas zoom).
+const HIDDEN_ID_RE = /poi|housenumber|building|aeroway|ferry|pier|service/i
+
+function hideNoise(map) {
+  for (const layer of map.getStyle()?.layers ?? []) {
+    const src = layer['source-layer'] ?? ''
+    if (HIDDEN_SOURCE_LAYERS.has(src) || HIDDEN_ID_RE.test(layer.id)) {
+      try {
+        map.setLayoutProperty(layer.id, 'visibility', 'none')
+      } catch {
+        /* couche non masquable : on la laisse */
+      }
+    }
+  }
+}
+
 function paint(map, id, prop, value) {
   try {
     map.setPaintProperty(id, prop, value)
@@ -76,6 +107,8 @@ export function applyPalette(map, theme = 'dark') {
   const P = PALETTES[theme] ?? DARK
   const layers = map.getStyle()?.layers
   if (!layers) return
+
+  hideNoise(map)
 
   for (const layer of layers) {
     const { id, type } = layer

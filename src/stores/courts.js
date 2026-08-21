@@ -8,6 +8,7 @@ import {
   voteHelpful,
   uploadCourtPhoto,
 } from '../services/supabase.js'
+import { distanceMeters } from '../services/geo.js'
 
 export const useCourtsStore = defineStore('courts', {
   state: () => ({
@@ -16,9 +17,20 @@ export const useCourtsStore = defineStore('courts', {
     loading: false,
     error: null,
     filters: { surface: null, condition: null, traffic: null },
+    // Position de l utilisateur, une fois qu il l a autorisee.
+    userPosition: null,
   }),
 
   getters: {
+    // Les terrains, augmentes de leur distance quand on sait ou est l utilisateur.
+    withDistance(state) {
+      const from = state.userPosition
+      return state.courts.map((c) => ({
+        ...c,
+        distance: from ? distanceMeters(from, { lat: c.lat, lng: c.lng }) : null,
+      }))
+    },
+
     filtered(state) {
       return state.courts.filter(
         (c) =>
@@ -27,6 +39,15 @@ export const useCourtsStore = defineStore('courts', {
           (!state.filters.traffic || c.traffic === state.filters.traffic),
       )
     },
+    // Ce que le joueur veut voir en arrivant : les plus proches d abord.
+    nearby() {
+      if (!this.userPosition) return []
+      return [...this.filtered]
+        .map((c) => ({ ...c, distance: distanceMeters(this.userPosition, { lat: c.lat, lng: c.lng }) }))
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 12)
+    },
+
     selected(state) {
       return state.courts.find((c) => c.id === state.selectedId) ?? null
     },
@@ -75,6 +96,10 @@ export const useCourtsStore = defineStore('courts', {
 
     async addPhoto(courtId, file) {
       return uploadCourtPhoto(courtId, file)
+    },
+
+    setUserPosition(pos) {
+      this.userPosition = pos
     },
 
     select(id) {
