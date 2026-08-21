@@ -27,20 +27,33 @@ const showTabBar = computed(() => !TASK_ROUTES.includes(route.name))
 
     <TabBar v-if="showTabBar" />
 
-    <!-- Toast global avec mascotte -->
-    <Transition
-      enter-active-class="transition duration-300"
-      enter-from-class="translate-y-4 opacity-0"
-      leave-active-class="transition duration-300"
-      leave-to-class="translate-y-4 opacity-0"
+    <!-- Toast global avec mascotte.
+         La région live est PERMANENTE : un lecteur d'écran n'annonce que ce
+         qui est inséré dans une région déjà présente au moment du changement.
+         Monter la région en même temps que son contenu (un v-if sur le
+         conteneur) ne produirait aucune annonce — et depuis que tout le
+         feedback passe par ce toast, ce serait le seul retour du produit qui
+         resterait muet. -->
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      class="pointer-events-none fixed bottom-24 left-1/2 z-50 -translate-x-1/2 lg:bottom-8"
     >
-      <div
-        v-if="toast.state.visible"
-        class="fixed bottom-24 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-edge bg-surface px-4 py-3 shadow-2xl lg:bottom-8"
+      <Transition
+        enter-active-class="transition duration-300"
+        enter-from-class="translate-y-4 opacity-0"
+        leave-active-class="transition duration-300"
+        leave-to-class="translate-y-4 opacity-0"
       >
-        <Mascot :size="40" />
-        <p class="text-sm font-semibold">{{ toast.state.message }}</p>
-      </div>
-    </Transition>
+        <div
+          v-if="toast.state.visible"
+          class="flex items-center gap-3 rounded-2xl border border-edge bg-surface px-4 py-3 shadow-2xl"
+        >
+          <Mascot :size="40" />
+          <p class="text-sm font-semibold">{{ toast.state.message }}</p>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
