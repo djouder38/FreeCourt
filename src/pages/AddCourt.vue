@@ -45,7 +45,7 @@ async function onSubmit(form) {
     <div v-if="!position" class="flex flex-col items-center gap-4 py-16 text-center">
       <Mascot mood="sad" />
       <p class="text-txt-soft">Commence par placer ton pin sur la carte.</p>
-      <button class="rounded-full bg-accent px-6 py-3 font-bold uppercase tracking-wide" @click="router.push('/')">
+      <button class="rounded-full bg-accent text-court px-6 py-3 font-bold uppercase tracking-wide" @click="router.push('/')">
         Retour à la carte
       </button>
     </div>
@@ -57,7 +57,7 @@ async function onSubmit(form) {
         jusqu'à 5 validations de la communauté.
       </p>
       <CourtForm :submitting="submitting" @submit="onSubmit" />
-      <p v-if="error" class="mt-3 text-sm text-bad">{{ error }}</p>
+      <p v-if="error" class="mt-3 text-sm text-bad-soft">{{ error }}</p>
     </template>
   </div>
 </template>

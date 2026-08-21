@@ -77,12 +77,12 @@ async function vote(review) {
       <button
         type="button"
         :disabled="submitting"
-        class="rounded-full bg-accent px-5 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
+        class="rounded-full bg-accent text-court px-5 py-2 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
         @click="submit"
       >
         {{ submitting ? 'Envoi…' : 'Poster' }}
       </button>
-      <p v-if="error" class="mt-2 text-xs text-bad">{{ error }}</p>
+      <p v-if="error" class="mt-2 text-xs text-bad-soft">{{ error }}</p>
     </div>
 
     <ul v-if="court.reviews?.length" class="space-y-3">

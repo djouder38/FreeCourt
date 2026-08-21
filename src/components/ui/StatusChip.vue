@@ -6,7 +6,7 @@ const props = defineProps({
 const CONFIG = {
   draft: { label: 'À vérifier', classes: 'bg-warn/15 text-warn border-warn/40' },
   validated: { label: 'Validé', classes: 'bg-ok/15 text-ok border-ok/40' },
-  flagged: { label: 'Signalé', classes: 'bg-bad/15 text-bad border-bad/40' },
+  flagged: { label: 'Signalé', classes: 'bg-bad/15 text-bad-soft border-bad-soft/40' },
 }
 </script>
 

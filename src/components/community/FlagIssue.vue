@@ -42,14 +42,14 @@ async function submit() {
         placeholder="Ex : le terrain n'existe plus, les paniers ont été retirés…"
         class="mb-3 w-full rounded-xl border border-edge bg-card px-3 py-2 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
       ></textarea>
-      <p v-if="error" class="mb-2 text-xs text-bad">{{ error }}</p>
+      <p v-if="error" class="mb-2 text-xs text-bad-soft">{{ error }}</p>
       <div class="flex justify-end gap-2">
         <button class="rounded-full border border-edge px-4 py-2 text-sm font-semibold" @click="emit('close')">
           Annuler
         </button>
         <button
           :disabled="submitting"
-          class="rounded-full bg-bad px-4 py-2 text-sm font-bold uppercase disabled:opacity-50"
+          class="rounded-full bg-bad text-court px-4 py-2 text-sm font-bold uppercase disabled:opacity-50"
           @click="submit"
         >
           {{ submitting ? 'Envoi…' : 'Signaler' }}

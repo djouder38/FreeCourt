@@ -24,7 +24,7 @@ const userStore = useUserStore()
         La connexion arrive très vite.
       </p>
       <button
-        class="rounded-full bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide opacity-60"
+        class="rounded-full bg-accent text-court px-6 py-3 text-sm font-bold uppercase tracking-wide opacity-60"
         title="Bientôt disponible"
         @click="userStore.login()"
       >

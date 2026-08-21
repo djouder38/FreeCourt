@@ -38,7 +38,7 @@ defineEmits(['open'])
     </p>
 
     <button
-      class="w-full rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-white shadow-lg shadow-accent/25 hover:bg-accent/90"
+      class="w-full rounded-full bg-accent py-3 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25 hover:bg-accent/90"
       @click="$emit('open')"
     >
       Voir le terrain

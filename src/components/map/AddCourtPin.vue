@@ -53,7 +53,7 @@ async function searchAddress() {
           {{ searching ? '…' : 'OK' }}
         </button>
       </form>
-      <p v-if="searchError" class="mt-1 text-center text-xs text-bad">{{ searchError }}</p>
+      <p v-if="searchError" class="mt-1 text-center text-xs text-bad-soft">{{ searchError }}</p>
     </div>
 
     <!-- Instruction -->
@@ -73,7 +73,7 @@ async function searchAddress() {
       </button>
       <button
         v-if="mapStore.pinLngLat"
-        class="rounded-full bg-accent px-8 py-3 text-sm font-bold uppercase tracking-wide shadow-lg shadow-accent/30"
+        class="rounded-full bg-accent text-court px-8 py-3 text-sm font-bold uppercase tracking-wide shadow-lg shadow-accent/30"
         @click="emit('confirm')"
       >
         C'est ici ✓

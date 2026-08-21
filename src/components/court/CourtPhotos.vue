@@ -64,7 +64,7 @@ async function onFile(e) {
     <p v-if="court.photos.length === 0 && !uploading" class="mt-2 text-xs text-txt-soft">
       Aucune photo pour l'instant (3 max par terrain).
     </p>
-    <p v-if="error" class="mt-2 text-xs text-bad">{{ error }}</p>
+    <p v-if="error" class="mt-2 text-xs text-bad-soft">{{ error }}</p>
     <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="onFile" />
   </section>
 </template>

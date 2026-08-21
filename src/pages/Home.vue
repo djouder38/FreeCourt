@@ -144,7 +144,7 @@ function toggleFilter(field, key) {
             placeholder="Ville, quartier, adresse…"
             class="min-w-0 flex-1 rounded-xl border border-edge bg-card px-3 py-2 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
           />
-          <button class="rounded-xl bg-accent px-3 text-sm font-bold" :disabled="searching">
+          <button class="rounded-xl bg-accent text-court px-3 text-sm font-bold" :disabled="searching">
             {{ searching ? '…' : '🔍' }}
           </button>
         </form>
@@ -169,7 +169,7 @@ function toggleFilter(field, key) {
 
       <div v-else class="flex-1 p-2">
         <p v-if="courtsStore.loading" class="p-4 text-sm text-txt-soft">Chargement…</p>
-        <p v-else-if="courtsStore.error" class="p-4 text-sm text-bad">{{ courtsStore.error }}</p>
+        <p v-else-if="courtsStore.error" class="p-4 text-sm text-bad-soft">{{ courtsStore.error }}</p>
         <div v-else-if="courtsStore.filtered.length === 0" class="flex flex-col items-center gap-3 p-8 text-center">
           <Mascot mood="sad" :size="72" />
           <p class="text-sm text-txt-soft">Aucun terrain ici. Ajoute le premier !</p>
@@ -191,7 +191,7 @@ function toggleFilter(field, key) {
       <!-- Les 2 actions principales, à parité -->
       <div class="space-y-2 border-t border-edge p-4">
         <button
-          class="w-full rounded-full bg-accent py-3 font-bold uppercase tracking-wide shadow-lg shadow-accent/25"
+          class="w-full rounded-full bg-accent text-court py-3 font-bold uppercase tracking-wide shadow-lg shadow-accent/25"
           @click="findNearMe"
         >
           📍 Un terrain près de moi
@@ -225,7 +225,7 @@ function toggleFilter(field, key) {
           <button
             type="submit"
             :disabled="searching"
-            class="shrink-0 rounded-full bg-accent px-4 text-sm font-bold shadow-lg"
+            class="shrink-0 rounded-full bg-accent text-court px-4 text-sm font-bold shadow-lg"
           >
             {{ searching ? '…' : '🔍' }}
           </button>
@@ -257,7 +257,7 @@ function toggleFilter(field, key) {
       <div class="absolute left-4 z-10 transition-all" :class="searchOpen ? 'top-20 lg:top-4' : 'top-4'">
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-lg shadow-lg"
-          :class="{ 'bg-accent': courtsStore.hasActiveFilters }"
+          :class="{ 'bg-accent text-court': courtsStore.hasActiveFilters }"
           aria-label="Filtres"
           @click="filtersOpen = !filtersOpen"
         >
@@ -286,7 +286,7 @@ function toggleFilter(field, key) {
         class="absolute inset-x-3 bottom-24 z-10 flex flex-col gap-2 lg:hidden"
       >
         <button
-          class="w-full rounded-full bg-accent py-3.5 text-sm font-bold uppercase tracking-wide shadow-xl shadow-accent/30"
+          class="w-full rounded-full bg-accent text-court py-3.5 text-sm font-bold uppercase tracking-wide shadow-xl shadow-accent/30"
           @click="findNearMe"
         >
           📍 Trouver un terrain près de moi
@@ -311,7 +311,7 @@ function toggleFilter(field, key) {
       <p
         v-if="locating"
         class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-black/85 px-4 py-2 text-center text-xs shadow-lg"
-        :class="{ 'bg-bad/90': locating === 'denied' || locating === 'unsupported' }"
+        :class="{ 'bg-bad-soft text-court': locating === 'denied' || locating === 'unsupported' }"
       >
         {{ LOCATING_MESSAGES[locating] }}
       </p>
@@ -323,7 +323,7 @@ function toggleFilter(field, key) {
       </p>
       <p
         v-else-if="courtsStore.error"
-        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad px-4 py-2 text-xs font-semibold lg:hidden"
+        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad text-court px-4 py-2 text-xs font-semibold lg:hidden"
       >
         {{ courtsStore.error }}
       </p>

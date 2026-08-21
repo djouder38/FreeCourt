@@ -50,13 +50,13 @@ async function validate(type) {
         👌 Infos correctes
       </button>
       <button
-        class="rounded-full border border-bad/50 bg-bad/10 px-4 py-2 text-sm font-semibold text-bad"
+        class="rounded-full border border-bad-soft/50 bg-bad/10 px-4 py-2 text-sm font-semibold text-bad-soft"
         @click="flagOpen = true"
       >
         🚩 Un problème
       </button>
     </div>
-    <p v-if="error" class="mt-2 text-xs text-bad">{{ error }}</p>
+    <p v-if="error" class="mt-2 text-xs text-bad-soft">{{ error }}</p>
 
     <FlagIssue
       v-if="flagOpen"

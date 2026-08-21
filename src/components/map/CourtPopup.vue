@@ -21,7 +21,7 @@ defineEmits(['open', 'close'])
       ⭐ {{ court.rating_avg }}/5 · {{ court.rating_count }} avis
     </p>
     <button
-      class="w-full rounded-full bg-accent py-2 text-sm font-bold uppercase tracking-wide text-white hover:bg-accent/90"
+      class="w-full rounded-full bg-accent py-2 text-sm font-bold uppercase tracking-wide text-court hover:bg-accent/90"
       @click="$emit('open')"
     >
       Voir le terrain

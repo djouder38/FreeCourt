@@ -44,7 +44,7 @@ function submit() {
         placeholder="Ex : Playground des Glacis"
         class="w-full rounded-xl border border-edge bg-surface px-4 py-3 outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
       />
-      <p v-if="nameError" class="mt-1 text-xs text-bad">{{ nameError }}</p>
+      <p v-if="nameError" class="mt-1 text-xs text-bad-soft">{{ nameError }}</p>
     </div>
 
     <fieldset>
@@ -109,7 +109,7 @@ function submit() {
     <button
       type="submit"
       :disabled="submitting"
-      class="w-full rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-white shadow-lg shadow-accent/25 disabled:opacity-50"
+      class="w-full rounded-full bg-accent py-3.5 font-bold uppercase tracking-wide text-court shadow-lg shadow-accent/25 disabled:opacity-50"
     >
       {{ submitting ? 'Ajout en cours…' : 'Ajouter le terrain 🏀' }}
     </button>

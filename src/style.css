@@ -11,7 +11,8 @@
   --color-txt-soft: #9ca3af;
   --color-ok: #22c55e;
   --color-warn: #f59e0b;
-  --color-bad: #ef4444;
+  --color-bad: #ef4444; /* fonds pleins : texte encre par-dessus */
+  --color-bad-soft: #f87171; /* texte rouge sur fond sombre : 5.61:1 */
 
   --font-display: 'Bebas Neue', 'Arial Narrow', sans-serif;
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -29,6 +30,47 @@ body {
   color: #fff;
   font-family: var(--font-sans);
   overscroll-behavior: none;
+}
+
+
+/* Surfaces que le navigateur dessine par defaut : elles appartiennent aussi
+   a la palette. Sans ca, la selection et le focus sortent du systeme. */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-court);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input,
+textarea {
+  caret-color: var(--color-accent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-edge) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-edge);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-txt-soft);
+  background-clip: content-box;
 }
 
 /* Marqueurs FreeCourt posés sur la carte MapLibre */
