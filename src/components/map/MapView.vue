@@ -1,11 +1,13 @@
 <script setup>
 import { h, onBeforeUnmount, onMounted, ref, render, watch } from 'vue'
+import Supercluster from 'supercluster'
 import { createMap, maplibregl } from '../../services/mapbox.js'
 import { useCourtsStore } from '../../stores/courts.js'
 import { useMapStore } from '../../stores/map.js'
 import CourtMarker from './CourtMarker.vue'
+import ClusterMarker from './ClusterMarker.vue'
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select', 'locating'])
 
 const courtsStore = useCourtsStore()
 const mapStore = useMapStore()
@@ -13,36 +15,98 @@ const mapEl = ref(null)
 
 let map = null
 let pinMarker = null
-const markers = new Map() // court.id → { marker, el }
+let index = null
+// clé ("court:<id>" ou "cluster:<id>") → { marker, el }
+const markers = new Map()
 
-function renderMarkers() {
-  const wanted = new Map(courtsStore.filtered.map((c) => [c.id, c]))
+// Le clustering est calculé côté JS (supercluster) plutôt que par la source
+// MapLibre : c'est déterministe, indépendant du rendu des tuiles, et ça
+// laisse les markers en DOM pour garder les SVG dynamiques de FreeCourt.
+function buildIndex() {
+  index = new Supercluster({ radius: 60, maxZoom: 16 })
+  index.load(
+    courtsStore.filtered.map((court) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [court.lng, court.lat] },
+      properties: { court },
+    })),
+  )
+}
 
-  for (const [id, entry] of markers) {
-    if (!wanted.has(id)) {
-      render(null, entry.el)
-      entry.marker.remove()
-      markers.delete(id)
+function currentBBox() {
+  const b = map.getBounds()
+  return [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]
+}
+
+function syncMarkers() {
+  if (!map || !index) return
+
+  const zoom = Math.round(map.getZoom())
+  const clusters = index.getClusters(currentBBox(), zoom)
+  const seen = new Set()
+
+  for (const feature of clusters) {
+    const [lng, lat] = feature.geometry.coordinates
+    const isCluster = feature.properties.cluster === true
+    const key = isCluster
+      ? `cluster:${feature.properties.cluster_id}`
+      : `court:${feature.properties.court.id}`
+    seen.add(key)
+
+    const existing = markers.get(key)
+    if (existing) {
+      existing.marker.setLngLat([lng, lat])
+      continue
     }
-  }
 
-  for (const [id, court] of wanted) {
-    if (markers.has(id)) {
-      const entry = markers.get(id)
-      render(h(CourtMarker, { court }), entry.el)
-      entry.marker.setLngLat([court.lng, court.lat])
+    const el = document.createElement('div')
+    if (isCluster) {
+      const count = feature.properties.point_count
+      render(h(ClusterMarker, { count }), el)
+      el.addEventListener('click', (event) => {
+        event.stopPropagation()
+        if (mapStore.mode === 'pin') return
+        zoomIntoCluster(feature.properties.cluster_id, [lng, lat])
+      })
     } else {
-      const el = document.createElement('div')
+      const court = feature.properties.court
       render(h(CourtMarker, { court }), el)
-      el.addEventListener('click', (e) => {
-        e.stopPropagation()
+      el.addEventListener('click', (event) => {
+        event.stopPropagation()
         if (mapStore.mode === 'pin') return
         emit('select', court.id)
       })
-      const marker = new maplibregl.Marker({ element: el }).setLngLat([court.lng, court.lat]).addTo(map)
-      markers.set(id, { marker, el })
     }
+
+    const marker = new maplibregl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map)
+    markers.set(key, { marker, el })
   }
+
+  for (const [key, entry] of markers) {
+    if (seen.has(key)) continue
+    render(null, entry.el)
+    entry.marker.remove()
+    markers.delete(key)
+  }
+}
+
+function zoomIntoCluster(clusterId, center) {
+  const target = Math.min(index.getClusterExpansionZoom(clusterId), 17)
+  map.easeTo({ center, zoom: target + 0.2, duration: 500 })
+}
+
+function clearMarkers() {
+  for (const entry of markers.values()) {
+    render(null, entry.el)
+    entry.marker.remove()
+  }
+  markers.clear()
+}
+
+function refresh() {
+  buildIndex()
+  clearMarkers()
+  syncMarkers()
 }
 
 function showPin(lngLat) {
@@ -60,18 +124,22 @@ function showPin(lngLat) {
   if (!pinMarker._map) pinMarker.addTo(map)
 }
 
-function removePin() {
-  pinMarker?.remove()
-}
-
 function flyTo(lngLat, zoom = 14) {
   map?.flyTo({ center: [lngLat.lng, lngLat.lat], zoom })
 }
 
 function locateMe() {
-  navigator.geolocation?.getCurrentPosition(
-    (pos) => flyTo({ lng: pos.coords.longitude, lat: pos.coords.latitude }),
-    () => {},
+  if (!navigator.geolocation) {
+    emit('locating', { status: 'unsupported' })
+    return
+  }
+  emit('locating', { status: 'searching' })
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      flyTo({ lng: pos.coords.longitude, lat: pos.coords.latitude }, 14)
+      emit('locating', { status: 'done' })
+    },
+    () => emit('locating', { status: 'denied' }),
     { enableHighAccuracy: true, timeout: 8000 },
   )
 }
@@ -85,28 +153,28 @@ onMounted(() => {
     const c = map.getCenter()
     mapStore.center = [c.lng, c.lat]
     mapStore.zoom = map.getZoom()
+    syncMarkers()
   })
+  map.on('zoom', syncMarkers)
 
   map.on('click', (e) => {
-    if (mapStore.mode === 'pin') {
-      mapStore.dropPin({ lng: e.lngLat.lng, lat: e.lngLat.lat })
-    } else {
-      emit('select', null)
-    }
+    if (mapStore.mode === 'pin') mapStore.dropPin({ lng: e.lngLat.lng, lat: e.lngLat.lat })
+    else emit('select', null)
   })
 
-  // Les markers sont des éléments DOM : pas besoin d'attendre le 'load' du
-  // style (qui ne se rejoue pas toujours au remount SPA).
-  renderMarkers()
+  refresh()
+
+  if (import.meta.env.DEV) window.__fcMap = map
 })
 
-watch(() => courtsStore.filtered, renderMarkers)
+watch(() => courtsStore.filtered, refresh)
 
 watch(
   () => mapStore.mode,
   (mode) => {
-    mapEl.value?.querySelector('.maplibregl-canvas')?.closest('.maplibregl-map')?.classList.toggle('fc-pin-mode', mode === 'pin')
-    if (mode !== 'pin') removePin()
+    // MapLibre pose .maplibregl-map sur le conteneur lui-même
+    mapEl.value?.classList.toggle('fc-pin-mode', mode === 'pin')
+    if (mode !== 'pin') pinMarker?.remove()
   },
 )
 
@@ -118,7 +186,7 @@ watch(
 )
 
 onBeforeUnmount(() => {
-  for (const entry of markers.values()) render(null, entry.el)
+  clearMarkers()
   map?.remove()
 })
 </script>

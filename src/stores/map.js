@@ -7,9 +7,18 @@ export const useMapStore = defineStore('map', {
     // 'browse' = navigation normale, 'pin' = mode placement d'un terrain
     mode: 'browse',
     pinLngLat: null,
+    // Barre de recherche : pilotée depuis la tab bar, lue par Home.
+    searchOpen: false,
   }),
 
   actions: {
+    toggleSearch() {
+      this.searchOpen = !this.searchOpen
+    },
+    closeSearch() {
+      this.searchOpen = false
+    },
+
     enterPinMode() {
       this.mode = 'pin'
       this.pinLngLat = null

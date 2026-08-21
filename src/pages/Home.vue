@@ -18,12 +18,32 @@ const mapStore = useMapStore()
 
 const mapView = ref(null)
 const filtersOpen = ref(false)
-const searchOpen = ref(false)
+const searchOpen = computed(() => mapStore.searchOpen)
 const searchQuery = ref('')
 const searchResults = ref([])
 const searching = ref(false)
+const searchError = ref(null)
+const locating = ref(null)
 
 const selectedCourt = computed(() => courtsStore.selected)
+
+const LOCATING_MESSAGES = {
+  searching: 'Recherche de ta position…',
+  denied: 'Position refusée — autorise la géolocalisation dans ton navigateur.',
+  unsupported: 'Ton navigateur ne gère pas la géolocalisation.',
+}
+
+function onLocating({ status }) {
+  locating.value = status === 'done' ? null : status
+  if (status === 'denied' || status === 'unsupported') {
+    setTimeout(() => (locating.value = null), 4000)
+  }
+}
+
+function findNearMe() {
+  courtsStore.select(null)
+  mapView.value?.locateMe()
+}
 
 onMounted(() => {
   if (courtsStore.courts.length === 0) courtsStore.load()
@@ -52,6 +72,7 @@ async function runSearch() {
   const q = searchQuery.value.trim()
   if (!q) return
   searching.value = true
+  searchError.value = null
   try {
     const res = await fetch(
       'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q=' + encodeURIComponent(q),
@@ -61,21 +82,28 @@ async function runSearch() {
       lng: parseFloat(r.lon),
       lat: parseFloat(r.lat),
     }))
+    if (searchResults.value.length === 0) searchError.value = 'Aucun lieu trouvé.'
   } catch {
     searchResults.value = []
+    searchError.value = 'Recherche indisponible.'
   } finally {
     searching.value = false
   }
 }
 
 function gotoPlace(place) {
-  searchOpen.value = false
+  mapStore.closeSearch()
   searchQuery.value = ''
   searchResults.value = []
+  searchError.value = null
   mapView.value?.flyTo(place, 13)
 }
 
-defineExpose({ openSearch: () => (searchOpen.value = true) })
+function closeSearch() {
+  mapStore.closeSearch()
+  searchResults.value = []
+  searchError.value = null
+}
 
 const FILTER_GROUPS = [
   { field: 'surface', label: 'Surface', options: SURFACE_LABELS },
@@ -160,9 +188,16 @@ function toggleFilter(field, key) {
         </button>
       </div>
 
-      <div class="border-t border-edge p-4">
+      <!-- Les 2 actions principales, à parité -->
+      <div class="space-y-2 border-t border-edge p-4">
         <button
           class="w-full rounded-full bg-accent py-3 font-bold uppercase tracking-wide shadow-lg shadow-accent/25"
+          @click="findNearMe"
+        >
+          📍 Un terrain près de moi
+        </button>
+        <button
+          class="w-full rounded-full border-2 border-accent bg-transparent py-3 font-bold uppercase tracking-wide text-accent hover:bg-accent/10"
           @click="startAdd"
         >
           🏀 Ajouter un terrain
@@ -172,10 +207,54 @@ function toggleFilter(field, key) {
 
     <!-- Carte -->
     <div class="relative min-w-0 flex-1">
-      <MapView ref="mapView" @select="onSelect" />
+      <MapView ref="mapView" @select="onSelect" @locating="onLocating" />
 
-      <!-- Ronds flottants : filtres + position -->
-      <div class="absolute left-4 top-4 z-10">
+      <!-- Recherche compacte : juste un champ + un bouton, en haut de la carte -->
+      <div
+        v-if="searchOpen"
+        class="absolute inset-x-3 top-3 z-20 lg:hidden"
+      >
+        <form class="flex gap-2" @submit.prevent="runSearch">
+          <input
+            v-model="searchQuery"
+            type="search"
+            autofocus
+            placeholder="Ville, quartier, adresse…"
+            class="min-w-0 flex-1 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm shadow-lg outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
+          />
+          <button
+            type="submit"
+            :disabled="searching"
+            class="shrink-0 rounded-full bg-accent px-4 text-sm font-bold shadow-lg"
+          >
+            {{ searching ? '…' : '🔍' }}
+          </button>
+          <button
+            type="button"
+            aria-label="Fermer la recherche"
+            class="shrink-0 rounded-full border border-edge bg-surface px-3 text-txt-soft shadow-lg"
+            @click="closeSearch"
+          >
+            ×
+          </button>
+        </form>
+        <p v-if="searchError" class="mt-2 rounded-full bg-surface px-4 py-2 text-center text-xs text-txt-soft shadow-lg">
+          {{ searchError }}
+        </p>
+        <div v-if="searchResults.length" class="mt-2 overflow-hidden rounded-2xl border border-edge bg-surface shadow-2xl">
+          <button
+            v-for="place in searchResults"
+            :key="place.label"
+            class="block w-full truncate px-4 py-2.5 text-left text-xs hover:bg-card"
+            @click="gotoPlace(place)"
+          >
+            📍 {{ place.label }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Filtres (le rond descend quand la recherche occupe le haut) -->
+      <div class="absolute left-4 z-10 transition-all" :class="searchOpen ? 'top-20 lg:top-4' : 'top-4'">
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-lg shadow-lg"
           :class="{ 'bg-accent': courtsStore.hasActiveFilters }"
@@ -201,22 +280,24 @@ function toggleFilter(field, key) {
           </div>
         </div>
       </div>
-      <button
-        class="absolute right-4 top-4 z-10 grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-lg shadow-lg"
-        aria-label="Ma position"
-        @click="mapView?.locateMe()"
-      >
-        📍
-      </button>
-
-      <!-- Bouton AJOUTER flottant (mobile) -->
-      <button
+      <!-- Les 2 actions principales (mobile), juste au-dessus de la tab bar -->
+      <div
         v-if="mapStore.mode === 'browse'"
-        class="absolute bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-full bg-accent px-8 py-3.5 font-bold uppercase tracking-wide shadow-xl shadow-accent/30 lg:hidden"
-        @click="startAdd"
+        class="absolute inset-x-3 bottom-24 z-10 flex flex-col gap-2 lg:hidden"
       >
-        🏀 Ajouter
-      </button>
+        <button
+          class="w-full rounded-full bg-accent py-3.5 text-sm font-bold uppercase tracking-wide shadow-xl shadow-accent/30"
+          @click="findNearMe"
+        >
+          📍 Trouver un terrain près de moi
+        </button>
+        <button
+          class="w-full rounded-full border-2 border-accent bg-surface/95 py-3 text-sm font-bold uppercase tracking-wide text-accent shadow-xl backdrop-blur"
+          @click="startAdd"
+        >
+          🏀 Ajouter un terrain
+        </button>
+      </div>
 
       <!-- Mode pin -->
       <AddCourtPin
@@ -226,16 +307,23 @@ function toggleFilter(field, key) {
         @goto="(p) => ((mapView?.flyTo(p, 16)), mapStore.dropPin(p))"
       />
 
-      <!-- États chargement / erreur (mobile, la sidebar les couvre en desktop) -->
+      <!-- États chargement / erreur / géoloc (mobile) -->
       <p
-        v-if="courtsStore.loading"
-        class="absolute bottom-40 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/80 px-4 py-2 text-xs lg:hidden"
+        v-if="locating"
+        class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-black/85 px-4 py-2 text-center text-xs shadow-lg"
+        :class="{ 'bg-bad/90': locating === 'denied' || locating === 'unsupported' }"
+      >
+        {{ LOCATING_MESSAGES[locating] }}
+      </p>
+      <p
+        v-else-if="courtsStore.loading"
+        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-black/85 px-4 py-2 text-xs lg:hidden"
       >
         Chargement des terrains…
       </p>
       <p
         v-else-if="courtsStore.error"
-        class="absolute bottom-40 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad px-4 py-2 text-xs font-semibold lg:hidden"
+        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad px-4 py-2 text-xs font-semibold lg:hidden"
       >
         {{ courtsStore.error }}
       </p>
@@ -246,28 +334,5 @@ function toggleFilter(field, key) {
       <CourtCard :court="selectedCourt" @open="openDetail(selectedCourt.id)" />
     </BottomSheet>
 
-    <!-- Recherche (ouverte via la tab bar) -->
-    <BottomSheet v-if="searchOpen" @close="searchOpen = false">
-      <h2 class="mb-3 font-display text-2xl tracking-wide">Chercher un spot</h2>
-      <form class="mb-3 flex gap-2" @submit.prevent="runSearch">
-        <input
-          v-model="searchQuery"
-          type="search"
-          placeholder="Ville, quartier, adresse…"
-          class="min-w-0 flex-1 rounded-xl border border-edge bg-card px-4 py-3 outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
-        />
-        <button class="rounded-xl bg-accent px-5 font-bold" :disabled="searching">
-          {{ searching ? '…' : 'OK' }}
-        </button>
-      </form>
-      <button
-        v-for="place in searchResults"
-        :key="place.label"
-        class="block w-full rounded-xl p-3 text-left text-sm hover:bg-card"
-        @click="gotoPlace(place)"
-      >
-        📍 {{ place.label }}
-      </button>
-    </BottomSheet>
   </div>
 </template>

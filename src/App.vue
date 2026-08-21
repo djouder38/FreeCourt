@@ -1,31 +1,30 @@
 <script setup>
-import { nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TabBar from './components/ui/TabBar.vue'
 import Mascot from './components/ui/Mascot.vue'
 import { useToast } from './composables/useToast.js'
+import { useMapStore } from './stores/map.js'
 
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
-const homeRef = ref(null)
+const mapStore = useMapStore()
 
 async function onSearch() {
-  // La recherche vit dans Home : si on n'y est pas, on y retourne d'abord.
+  // La recherche s'affiche sur la carte : si on n'y est pas, on y retourne.
   if (route.name !== 'home') {
     await router.push('/')
-    await nextTick()
+    mapStore.searchOpen = true
+    return
   }
-  homeRef.value?.openSearch?.()
+  mapStore.toggleSearch()
 }
 </script>
 
 <template>
   <div class="h-full">
     <main class="h-full pb-0">
-      <router-view v-slot="{ Component }">
-        <component :is="Component" ref="homeRef" />
-      </router-view>
+      <router-view />
     </main>
 
     <TabBar @search="onSearch" />

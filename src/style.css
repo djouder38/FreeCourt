@@ -45,6 +45,19 @@ body {
   opacity: 0.55;
 }
 
+/* Pastille de regroupement des terrains */
+.fc-cluster {
+  background: radial-gradient(circle at 35% 30%, #ff8a54, #e8551a);
+  border: 3px solid rgba(18, 20, 26, 0.9);
+  box-shadow:
+    0 0 0 4px rgba(255, 107, 43, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.fc-cluster:hover {
+  transform: scale(1.08);
+}
+
 /* Curseur en mode "pin ton terrain" */
 .maplibregl-map.fc-pin-mode .maplibregl-canvas {
   cursor: crosshair !important;
