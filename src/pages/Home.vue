@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCourtsStore } from '../stores/courts.js'
 import { useMapStore } from '../stores/map.js'
@@ -156,6 +156,19 @@ function closeSearch() {
   searchError.value = null
 }
 
+// Les deux panneaux se ferment au clic dehors ou par un nouvel appui sur
+// leur bouton — jamais par une croix : le bouton qui ouvre est celui qui ferme.
+const searchBox = ref(null)
+const filtersBox = ref(null)
+
+function onDocumentPointerDown(event) {
+  if (searchOpen.value && !searchBox.value?.contains(event.target)) closeSearch()
+  if (filtersOpen.value && !filtersBox.value?.contains(event.target)) filtersOpen.value = false
+}
+
+onMounted(() => document.addEventListener('pointerdown', onDocumentPointerDown))
+onBeforeUnmount(() => document.removeEventListener('pointerdown', onDocumentPointerDown))
+
 const FILTER_GROUPS = [
   { field: 'surface', label: 'Surface', options: SURFACE_LABELS },
   { field: 'condition', label: 'État', options: CONDITION_LABELS },
@@ -278,15 +291,15 @@ function toggleFilter(field, key) {
 
       <!-- Recherche : la loupe reste en haut à droite et le panneau se
            déploie vers le bas, en miroir des filtres à gauche. -->
-      <div class="absolute right-4 top-4 z-20 lg:hidden">
+      <div v-if="mapStore.mode === 'browse'" ref="searchBox" class="absolute right-4 top-4 z-20 lg:hidden">
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent shadow-lg"
           :class="searchOpen ? 'bg-accent text-on-accent' : 'bg-surface text-txt'"
-          :aria-label="searchOpen ? 'Fermer la recherche' : 'Chercher un terrain ou un lieu'"
+          aria-label="Chercher un terrain ou un lieu"
           :aria-expanded="searchOpen"
           @click="searchOpen ? closeSearch() : mapStore.toggleSearch()"
         >
-          <Icon :name="searchOpen ? 'close' : 'search'" :size="20" />
+          <Icon name="search" :size="20" />
         </button>
 
         <div
@@ -353,6 +366,7 @@ function toggleFilter(field, key) {
       <!-- Légende : toujours à portée, sous les filtres. L'encodage du
            marqueur ne se devine pas, il doit pouvoir s'expliquer. -->
       <button
+        v-if="mapStore.mode === 'browse'"
         class="absolute left-4 top-[4.75rem] z-10 grid h-12 w-12 place-items-center rounded-full border-2 border-edge bg-surface text-txt-soft shadow-lg"
         aria-label="Comment lire la carte"
         title="Comment lire la carte"
@@ -364,7 +378,7 @@ function toggleFilter(field, key) {
       <MapLegend v-if="legendOpen" @close="legendOpen = false" />
 
       <!-- Filtres (le rond descend quand la recherche occupe le haut) -->
-      <div class="absolute left-4 top-4 z-10">
+      <div v-if="mapStore.mode === 'browse'" ref="filtersBox" class="absolute left-4 top-4 z-10">
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent text-lg shadow-lg"
           :class="courtsStore.hasActiveFilters ? 'bg-accent text-on-accent' : 'bg-surface text-txt'"

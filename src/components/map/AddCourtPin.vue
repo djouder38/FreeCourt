@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useMapStore } from '../../stores/map.js'
+import Icon from '../ui/Icon.vue'
 
-// Overlay du mode "pin ton terrain" : instruction, recherche d'adresse
-// optionnelle (Nominatim), confirmation / annulation.
+// Overlay du mode "pin ton terrain". Tout est groupé en bas, près du pouce
+// et près du bouton de confirmation : posé en haut, ce bloc recouvrait les
+// contrôles de carte (filtres, légende, recherche).
 const emit = defineEmits(['confirm', 'cancel', 'goto'])
 const mapStore = useMapStore()
 
@@ -35,49 +37,56 @@ async function searchAddress() {
 </script>
 
 <template>
-  <div class="pointer-events-none absolute inset-0 z-20 flex flex-col">
-    <!-- Recherche d'adresse (optionnelle, secondaire) -->
-    <div class="pointer-events-auto mx-auto mt-4 w-[min(400px,calc(100vw-32px))]">
-      <form class="flex gap-2" @submit.prevent="searchAddress">
+  <div class="pointer-events-none absolute inset-0 z-20 flex flex-col justify-end">
+    <div class="pointer-events-auto mb-24 space-y-2 px-3 lg:mb-8">
+      <!-- Instruction : dit où on en est dans le geste -->
+      <p
+        class="mx-auto w-fit rounded-full border border-edge bg-surface px-4 py-2 text-center text-sm font-semibold shadow-lg"
+      >
+        {{
+          mapStore.pinLngLat
+            ? 'Ajuste le pin, puis confirme'
+            : 'Tape sur la carte pour placer ton terrain'
+        }}
+      </p>
+
+      <!-- Recherche d'adresse : secondaire, pour ceux qui préfèrent taper -->
+      <form class="mx-auto flex w-full max-w-md gap-2" @submit.prevent="searchAddress">
         <input
           v-model="address"
           type="search"
-          placeholder="Ou cherche une adresse… (optionnel)"
-          class="min-w-0 flex-1 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
+          placeholder="Ou cherche une adresse…"
+          class="min-w-0 flex-1 rounded-full border border-edge bg-surface px-4 py-2.5 text-sm shadow-lg outline-none placeholder:text-txt-soft focus:ring-2 focus:ring-accent"
         />
         <button
           type="submit"
           :disabled="searching"
-          class="rounded-full bg-card px-4 text-sm font-bold text-txt"
+          class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-edge bg-surface text-txt shadow-lg disabled:opacity-50"
+          aria-label="Chercher cette adresse"
         >
-          {{ searching ? '…' : 'OK' }}
+          <span v-if="searching" class="text-sm font-bold">…</span>
+          <Icon v-else name="search" :size="18" />
         </button>
       </form>
-      <p v-if="searchError" class="mt-1 text-center text-xs text-bad-soft">{{ searchError }}</p>
-    </div>
+      <p v-if="searchError" class="text-center text-xs text-bad-soft">{{ searchError }}</p>
 
-    <!-- Instruction -->
-    <div class="mx-auto mt-3">
-      <p class="rounded-full bg-txt/85 px-5 py-2.5 text-sm font-semibold shadow-lg">
-        {{ mapStore.pinLngLat ? 'Ajuste le pin, puis confirme' : 'Tape sur la carte pour placer ton terrain' }}
-      </p>
-    </div>
-
-    <!-- Actions -->
-    <div class="pointer-events-auto mt-auto mb-24 flex justify-center gap-3 lg:mb-8">
-      <button
-        class="rounded-full border border-edge bg-surface px-6 py-3 text-sm font-bold uppercase tracking-wide"
-        @click="emit('cancel')"
-      >
-        Annuler
-      </button>
-      <button
-        v-if="mapStore.pinLngLat"
-        class="rounded-full bg-accent text-on-accent px-8 py-3 text-sm font-bold uppercase tracking-wide shadow-lg shadow-accent/30"
-        @click="emit('confirm')"
-      >
-        C'est ici ✓
-      </button>
+      <!-- Actions -->
+      <div class="flex justify-center gap-3 pt-1">
+        <button
+          class="min-h-12 rounded-full border border-edge bg-surface px-6 py-3 text-sm font-bold uppercase tracking-wide shadow-lg"
+          @click="emit('cancel')"
+        >
+          Annuler
+        </button>
+        <button
+          v-if="mapStore.pinLngLat"
+          class="inline-flex min-h-12 items-center gap-2 rounded-full bg-accent px-8 py-3 text-sm font-bold uppercase tracking-wide text-on-accent shadow-lg shadow-accent/30"
+          @click="emit('confirm')"
+        >
+          <Icon name="check" :size="16" />
+          C'est ici
+        </button>
+      </div>
     </div>
   </div>
 </template>
