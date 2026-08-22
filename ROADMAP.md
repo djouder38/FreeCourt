@@ -10,7 +10,7 @@ fonctionnelle, mais est caduque sur le design).
 ## En ligne
 https://free-court-ebon.vercel.app — déploiement auto au push sur `main`.
 
-## Livré (v0.5.0 — 2026-08-21)
+## Livré (v0.6.0 — 2026-08-22)
 - Carte MapLibre abstraite : ne montre que ce qui aide à trouver un terrain.
 - Clustering, filtres, recherche (terrains + lieux), légende, géolocalisation.
 - Ajout de terrain, photos, avis, validation communautaire, signalement.
@@ -19,6 +19,8 @@ https://free-court-ebon.vercel.app — déploiement auto au push sur `main`.
 - Identité visuelle « béton et marquage au sol ».
 - Accessibilité : cibles 44px, clavier, lecteurs d'écran, reduced-motion.
 - PWA installable (icônes + manifeste).
+- Page de présentation au premier lancement, expliquant le concept et le
+  fonctionnement de la contribution.
 
 ## Prochaine étape — finir l'identité visuelle
 Deux chantiers ouverts par la refonte du 21/08, en attente du verdict de Théo
@@ -30,7 +32,6 @@ sur le rendu :
 
 ## Ensuite — solidité
 - Bottom sheet sans sortie explicite (ni bouton, ni Échap, ni clavier).
-- Onboarding au premier lancement : rien n'accueille un nouveau visiteur.
 - Chunk Home à 829 Ko (maplibre-gl non code-splitté), sur une app qu'on
   ouvre dehors en 4G.
 - Pluriels anglais figés (« 1 reviews »).

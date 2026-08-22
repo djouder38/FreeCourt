@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.6.0] — 2026-08-22
+Presentation du concept, contrastes audites sur toute l'app.
+
+- Page /decouvrir : affichee au premier lancement puis plus jamais,
+  accessible ensuite depuis le profil. Explique ce que la carte montre et
+  surtout comment la contribution tient debout, en quatre etapes illustrees
+  par les vrais marqueurs de l'app.
+- Audit de contraste sur 4 ecrans x 2 themes (la veille, seul l'accueil
+  avait ete verifie) : 7 echecs corriges, dont deux a 1.06:1 et 1.79:1 —
+  un texte d'aide reste en gris sur un bouton devenu bleu plein. Corrige
+  aussi l'attribution de la carte, mention legale qui traînait l'ancien
+  theme sombre en dur.
+- Le bandeau des terrains ne passe plus sous la tab bar sur les telephones a
+  encoche : les positions en dur ignoraient env(safe-area-inset-bottom),
+  remplacees par deux ancrages calcules.
+- Selecteur de langue ramene a deux drapeaux dessines en SVG (les emoji
+  drapeaux ne s'affichent pas sur Windows) ; le nom de la langue reste porte
+  par aria-label.
+
 ## [0.5.0] — 2026-08-21 (soir)
 Identité visuelle : sortie du Tailwind par défaut.
 
