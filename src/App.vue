@@ -14,7 +14,7 @@ useTheme().mount()
 
 // Ecrans de tache : la tab bar les recouvrirait (le bouton de soumission de
 // /add tombait littéralement dessous). Ils ont leur propre bouton retour.
-const TASK_ROUTES = ['add', 'court']
+const TASK_ROUTES = ['add', 'court', 'welcome']
 const showTabBar = computed(() => !TASK_ROUTES.includes(route.name))
 
 </script>
@@ -38,7 +38,7 @@ const showTabBar = computed(() => !TASK_ROUTES.includes(route.name))
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      class="pointer-events-none fixed bottom-24 left-1/2 z-50 -translate-x-1/2 lg:bottom-8"
+      class="above-tabbar pointer-events-none fixed left-1/2 z-50 -translate-x-1/2"
     >
       <Transition
         enter-active-class="transition duration-300"

@@ -24,7 +24,7 @@
   --color-card: #dcdddb; /* dalle intermédiaire */
   --color-edge: #8e918d; /* joint de dalle : un vrai trait, pas un filet */
   --color-txt: #16181a;
-  --color-txt-soft: #545a5e;
+  --color-txt-soft: #43484c;
 
   /* La peinture du terrain. Franche, saturée, elle couvre le béton. */
   --color-accent: #1550b4;
@@ -66,7 +66,7 @@
   --color-txt-soft: #9aa1a6;
   --color-accent: #2f6fe0;
   --color-accent-text: #6c9df0;
-  --color-on-accent: #0b1526;
+  --color-on-accent: #ffffff;
   --color-ball: #f2662a;
   --color-on-ball: #1a0d05;
   --color-line: #e9e7e1;
@@ -92,7 +92,7 @@
     --color-txt-soft: #9aa1a6;
     --color-accent: #2f6fe0;
     --color-accent-text: #6c9df0;
-    --color-on-accent: #0b1526;
+    --color-on-accent: #ffffff;
     --color-ball: #f2662a;
     --color-mark: #e8b02a;
     --color-gold: #e0b436;
@@ -118,6 +118,28 @@ body::before {
 
 :root[data-theme='dark'] body::before {
   opacity: 0.28;
+}
+
+/* Ancrages du bas d'ecran. La tab bar porte env(safe-area-inset-bottom) :
+   sur un iPhone a encoche elle mesure ~34px de plus que sa hauteur nominale,
+   et tout ce qui etait positionne en dur passait dessous. */
+:root {
+  --tabbar-h: calc(4.6rem + env(safe-area-inset-bottom, 0px));
+  --strip-h: 5.4rem;
+}
+
+.above-tabbar {
+  bottom: calc(var(--tabbar-h) + 0.5rem);
+}
+
+.above-strip {
+  bottom: calc(var(--tabbar-h) + var(--strip-h) + 0.5rem);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --tabbar-h: 0px;
+  }
 }
 
 html,
@@ -226,12 +248,20 @@ textarea {
 }
 
 /* Attribution discrète sur fond sombre */
+/* L'attribution est une mention legale obligatoire : elle suit le theme au
+   lieu de rester en gris sur noir translucide, illisible en mode jour. */
 .maplibregl-ctrl-attrib {
-  background: rgba(15, 15, 15, 0.7) !important;
+  background: var(--color-surface) !important;
+  color: var(--color-txt-soft) !important;
 }
 
-.maplibregl-ctrl-attrib a {
-  color: #9ca3af !important;
+.maplibregl-ctrl-attrib a,
+.maplibregl-ctrl-attrib-button {
+  color: var(--color-txt-soft) !important;
+}
+
+.maplibregl-ctrl-attrib a:hover {
+  color: var(--color-txt) !important;
 }
 
 /* Point « vous êtes ici » : un bleu franc, distinct de l'orange des terrains

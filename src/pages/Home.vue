@@ -443,7 +443,7 @@ function toggleFilter(field, key) {
            la cause et on offre la sortie. -->
       <div
         v-if="mapStore.mode === 'browse' && courtsStore.filtered.length === 0 && !courtsStore.loading"
-        class="absolute inset-x-3 bottom-24 z-10 rounded-2xl border border-edge bg-surface p-4 text-center shadow-[var(--shadow-raised)] backdrop-blur lg:hidden"
+        class="above-tabbar absolute inset-x-3 z-10 rounded-2xl border border-edge bg-surface p-4 text-center shadow-[var(--shadow-raised)] backdrop-blur lg:hidden"
       >
         <p class="text-sm font-semibold">{{ t('map.noMatch') }}</p>
         <button
@@ -460,7 +460,7 @@ function toggleFilter(field, key) {
       <div
         v-if="mapStore.mode === 'browse'"
         class="absolute right-4 z-10 flex flex-col gap-3 lg:hidden"
-        :class="hasPosition ? 'bottom-56' : 'bottom-28'"
+        :class="hasPosition ? 'above-strip' : 'above-tabbar'"
       >
         <button
           class="grid h-12 w-12 place-items-center rounded-full border-2 border-accent bg-surface text-txt shadow-[var(--shadow-slab)]"
@@ -492,20 +492,20 @@ function toggleFilter(field, key) {
       <!-- États chargement / erreur / géoloc (mobile) -->
       <p
         v-if="locating"
-        class="absolute bottom-48 left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-txt px-4 py-2 text-center text-xs shadow-[var(--shadow-slab)]"
+        class="above-strip absolute left-1/2 z-10 max-w-[90%] -translate-x-1/2 rounded-full bg-txt px-4 py-2 text-center text-xs shadow-[var(--shadow-slab)]"
         :class="{ 'bg-bad-soft text-on-accent': locating === 'denied' || locating === 'unsupported' }"
       >
         {{ t(LOCATING_MESSAGES[locating]) }}
       </p>
       <p
         v-else-if="courtsStore.loading"
-        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-txt px-4 py-2 text-xs lg:hidden"
+        class="above-strip absolute left-1/2 z-10 -translate-x-1/2 rounded-full bg-txt px-4 py-2 text-xs lg:hidden"
       >
         {{ t('map.loading') }}
       </p>
       <p
         v-else-if="courtsStore.error"
-        class="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad text-on-accent px-4 py-2 text-xs font-semibold lg:hidden"
+        class="above-strip absolute left-1/2 z-10 -translate-x-1/2 rounded-full bg-bad text-on-accent px-4 py-2 text-xs font-semibold lg:hidden"
       >
         {{ courtsStore.error }}
       </p>

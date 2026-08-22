@@ -19,7 +19,7 @@ const visible = computed(() => props.courts.slice(0, 10))
 </script>
 
 <template>
-  <div class="pointer-events-none absolute inset-x-0 bottom-20 z-10 lg:hidden">
+  <div class="pointer-events-none above-tabbar absolute inset-x-0 z-10 lg:hidden">
     <div class="pointer-events-auto flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 pb-1">
       <button
         v-for="court in visible"

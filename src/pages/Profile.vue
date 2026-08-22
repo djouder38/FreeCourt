@@ -28,6 +28,14 @@ const LANGUAGES = [
   { key: 'en', label: 'English' },
 ]
 
+// Un drapeau ne dit pas une langue à un lecteur d'écran, et Windows n'affiche
+// pas les emoji drapeaux : on les dessine, et le nom de la langue reste porté
+// par aria-label.
+const FLAGS = {
+  fr: '<rect width="8" height="16" x="0" fill="#1f3c88"/><rect width="8" height="16" x="8" fill="#e8e6e1"/><rect width="8" height="16" x="16" fill="#c8102e"/>',
+  en: '<rect width="24" height="16" fill="#1f3c88"/><path d="M0 0l24 16M24 0L0 16" stroke="#e8e6e1" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#c8102e" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#e8e6e1" stroke-width="5"/><path d="M12 0v16M0 8h24" stroke="#c8102e" stroke-width="2.6"/>',
+}
+
 const loginOpen = ref(false)
 const identifier = ref('')
 const code = ref('')
@@ -165,27 +173,41 @@ function logout() {
           @click="theme.set(choice.key)"
         >
           <span class="block text-sm font-bold">{{ t(choice.labelKey) }}</span>
-          <span class="mt-0.5 block text-[11px] leading-tight text-txt-soft">{{ t(choice.hintKey) }}</span>
+          <span
+            class="mt-0.5 block text-[11px] leading-tight"
+            :class="theme.mode.value === choice.key ? 'opacity-90' : 'text-txt-soft'"
+          >{{ t(choice.hintKey) }}</span>
         </button>
       </div>
     </section>
 
     <section class="mt-8">
       <h2 class="mb-3 font-display text-2xl tracking-wide">{{ t('profile.language') }}</h2>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="flex gap-3">
         <button
           v-for="lang in LANGUAGES"
           :key="lang.key"
           type="button"
-          class="min-h-12 rounded-2xl border px-3 py-3 text-center text-sm font-bold transition"
-          :class="locale === lang.key ? 'border-accent bg-accent text-on-accent' : 'border-edge bg-card'"
-          :lang="lang.key"
-          :aria-current="locale === lang.key ? 'true' : undefined"
+          class="grid h-11 w-14 place-items-center rounded-lg border-2 transition"
+          :class="locale === lang.key ? 'border-accent' : 'border-edge opacity-55 hover:opacity-100'"
+          :aria-label="lang.label"
+          :title="lang.label"
+          :aria-pressed="locale === lang.key"
           @click="setLocale(lang.key)"
         >
-          {{ lang.label }}
+          <svg viewBox="0 0 24 16" width="30" height="20" aria-hidden="true" v-html="FLAGS[lang.key]" />
         </button>
       </div>
+    </section>
+
+    <section class="mt-8">
+      <button
+        class="inline-flex min-h-11 items-center gap-2 border-2 border-edge bg-card px-4 text-sm font-bold"
+        @click="router.push('/decouvrir')"
+      >
+        <Icon name="ball" :size="16" />
+        {{ t('welcome.seeAgain') }}
+      </button>
     </section>
 
     <section class="mt-8">
